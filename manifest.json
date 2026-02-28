@@ -1,0 +1,52 @@
+{
+  "name": "বাংলা পঞ্জিকা",
+  "short_name": "পঞ্জিকা",
+  "description": "বাংলা পঞ্জিকা — সঠিক পঞ্চাঙ্গ, তিথি, নক্ষত্র, ২৫ মুহূর্ত ও উৎসব তালিকা। © Manik Roy",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#0c0c18",
+  "theme_color": "#d4a030",
+  "lang": "bn",
+  "dir": "ltr",
+  "categories": ["utilities", "lifestyle", "education"],
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "আজকের পঞ্জিকা",
+      "short_name": "আজ",
+      "description": "আজকের তিথি, নক্ষত্র ও মুহূর্ত দেখুন",
+      "url": "./index.html",
+      "icons": [
+        { "src": "icon-192.png", "sizes": "192x192", "type": "image/png" }
+      ]
+    }
+  ],
+  "prefer_related_applications": false
+}
