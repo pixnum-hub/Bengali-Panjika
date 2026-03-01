@@ -12,7 +12,7 @@
 <meta name="theme-color" content="#d4a030" id="metaTheme">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="পঞ্জিকা">
+<meta name="apple-mobile-web-app-title" content="বাংলা পঞ্জিকা">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="application-name" content="বাংলা পঞ্জিকা">
 
@@ -243,6 +243,10 @@ footer em{color:var(--accent);font-style:normal}
   <button class="tb on" onclick="setTheme('',this)">🌑 ডার্ক</button>
   <button class="tb" onclick="setTheme('L',this)">☀️ লাইট</button>
   <button class="tb" onclick="setTheme('O',this)">⚫ OLED</button>
+  <div style="width:1px;background:var(--border);margin:0 .2rem;align-self:stretch"></div>
+  <button class="tb" id="langBtn" onclick="toggleLang()">🔤 English</button>
+  <div style="width:1px;background:var(--border);margin:0 .2rem;align-self:stretch"></div>
+  <button class="tb" id="regionBtn" onclick="toggleRegion()">🇧🇩 BD</button>
 </div>
 <div class="now-badge" id="nowBadge">⏰ লোড হচ্ছে...</div>
 <main class="main">
@@ -250,9 +254,11 @@ footer em{color:var(--accent);font-style:normal}
 <div class="ctrl">
   <div class="crow">
     <span class="clbl">বাংলা সাল</span>
+    <button class="mnav" onclick="shiftY(-1)" style="padding:.3rem .6rem">◀</button>
     <input type="number" id="inYear" min="-1000000" max="1000000"/>
-    <button class="btoday" onclick="goToday()">📅 আজ</button>
-    <button class="btoday" onclick="resetAll()" style="background:var(--bg3);color:var(--text2);border:1px solid var(--border)" title="সব পরিষ্কার করুন">🔄 রিসেট</button>
+    <button class="mnav" onclick="shiftY(1)" style="padding:.3rem .6rem">▶</button>
+    <button class="btoday" onclick="goToday()">📅 <span class="lt" data-bn="আজ" data-en="Today">আজ</span></button>
+    <button class="btoday" onclick="resetAll()" style="background:var(--bg3);color:var(--text2);border:1px solid var(--border)" title="সব পরিষ্কার করুন">🔄</button>
   </div>
   <div class="crow">
     <span class="clbl">মাস</span>
@@ -276,7 +282,7 @@ footer em{color:var(--accent);font-style:normal}
     </div>
     <button class="mnav" onclick="shiftM(1)">▶</button>
   </div>
-  <div class="wdhdr">
+  <div class="wdhdr" id="wdhdr">
     <div class="wdh">রবি</div><div class="wdh">সোম</div><div class="wdh">মঙ্গল</div>
     <div class="wdh">বুধ</div><div class="wdh">বৃহঃ</div><div class="wdh">শুক্র</div><div class="wdh">শনি</div>
   </div>
@@ -289,29 +295,49 @@ footer em{color:var(--accent);font-style:normal}
   </div>
 </div>
 <!-- DAY DETAIL -->
-<div class="st">নির্বাচিত দিনের সম্পূর্ণ বিবরণ</div>
-<div class="ddet" id="ddet"></div>
+<div class="mcal" style="margin-bottom:.9rem">
+  <div class="mcal-hdr" onclick="toggleDayDet()" style="cursor:pointer;user-select:none;padding:.72rem 1rem;display:flex;align-items:center;justify-content:space-between">
+    <div style="font-size:.88rem;font-weight:700;color:var(--accent2);letter-spacing:.05em">✦ নির্বাচিত দিনের সম্পূর্ণ বিবরণ ✦</div>
+    <span id="dayDetArrow" style="color:var(--accent2);font-size:.82rem;transition:transform .25s;display:inline-block">▼</span>
+  </div>
+  <div id="dayDetBody" class="hidden">
+    <div class="ddet" id="ddet"></div>
+  </div>
+</div>
 <!-- PANCHANG -->
 <div class="mcal" id="panchaCard" style="margin-bottom:.9rem">
-  <div class="mcal-hdr" style="padding:.65rem 1rem">
+  <div class="mcal-hdr" onclick="togglePanch()" style="cursor:pointer;user-select:none;padding:.65rem 1rem;display:flex;align-items:center;justify-content:space-between">
     <div class="mcal-title"><div style="font-size:.85rem;font-weight:700;color:var(--accent2)" id="ptitle">পঞ্চাঙ্গ</div></div>
+    <span id="panchArrow" style="color:var(--accent2);font-size:.82rem;transition:transform .25s;display:inline-block">▼</span>
   </div>
-  <div class="pgrid" id="pgrid"></div>
-  <div style="border-top:1px solid var(--border)"><div class="vdt" id="vdt"></div></div>
+  <div id="panchBody" class="hidden">
+    <div class="pgrid" id="pgrid"></div>
+    <div style="border-top:1px solid var(--border)"><div class="vdt" id="vdt"></div></div>
+  </div>
 </div>
 <!-- MUHURTAS FOR SELECTED DAY -->
-<div class="st">নির্বাচিত দিনের ২৫টি মুহূর্ত</div>
 <div class="mcal" style="margin-bottom:.9rem">
-  <div class="muh-grid" id="muhGrid"></div>
+  <div class="mcal-hdr" onclick="toggleMuh()" style="cursor:pointer;user-select:none;padding:.72rem 1rem;display:flex;align-items:center;justify-content:space-between">
+    <div style="font-size:.88rem;font-weight:700;color:var(--accent2);letter-spacing:.05em">✦ নির্বাচিত দিনের মুহূর্ত ✦</div>
+    <span id="muhArrow" style="color:var(--accent2);font-size:.82rem;transition:transform .25s;display:inline-block">▼</span>
+  </div>
+  <div id="muhBody" class="hidden">
+    <div class="muh-grid" id="muhGrid"></div>
+  </div>
 </div>
 <!-- FESTIVALS -->
-<div class="st">বাংলার সম্পূর্ণ উৎসব তালিকা</div>
 <div class="fcard">
-  <div style="padding:.65rem .75rem .28rem">
-    <input class="fsrch" id="fsrch" placeholder="🔍 উৎসব খুঁজুন..." oninput="filterF(this.value)"/>
+  <div class="mcal-hdr" onclick="toggleFest()" style="cursor:pointer;user-select:none;padding:.72rem 1rem;display:flex;align-items:center;justify-content:space-between">
+    <div style="font-size:.88rem;font-weight:700;color:var(--accent2);letter-spacing:.05em">✦ বাংলার সম্পূর্ণ উৎসব তালিকা ✦</div>
+    <span id="festArrow" style="color:var(--accent2);font-size:.82rem;transition:transform .25s;display:inline-block">▼</span>
   </div>
-  <div class="mtabs" id="mtabs"></div>
-  <div id="fcont"></div>
+  <div id="festBody" class="hidden">
+    <div style="padding:.65rem .75rem .28rem">
+      <input class="fsrch" id="fsrch" placeholder="🔍 উৎসব খুঁজুন..." oninput="filterF(this.value)"/>
+    </div>
+    <div class="mtabs" id="mtabs"></div>
+    <div id="fcont"></div>
+  </div>
 </div>
 </main>
 <footer>
@@ -325,17 +351,29 @@ footer em{color:var(--accent);font-style:normal}
 /* ══════════════════════════════════════════════════════
    BENGALI DIGITS & CONSTANTS
 ══════════════════════════════════════════════════════ */
+/* ── LANGUAGE STATE ── */
+let LANG = 'bn'; // 'bn' or 'en'
+let REGION = 'BD'; // 'BD' or 'WB'
+
+/* ── LANGUAGE & REGION STATE ── */
+let LANG = 'bn';   // 'bn' | 'en'
+let REGION = 'BD'; // 'BD' | 'WB'
+
 const BD = ['০','১','২','৩','৪','৫','৬','৭','৮','৯'];
 function bn(n){
   const neg = n < 0;
   const s = Math.abs(Math.round(n)).toString();
+  if (LANG === 'en') return (neg ? '-' : '') + s;
   return (neg ? '-' : '') + s.split('').map(c => BD[+c]).join('');
 }
-function bnf(n, dec=0){ // format with decimals
+function bnf(n, dec=0){
   const neg = n < 0;
   const fixed = Math.abs(n).toFixed(dec);
+  if (LANG === 'en') return (neg ? '-' : '') + fixed;
   return (neg ? '-' : '') + fixed.replace(/[0-9]/g, d => BD[+d]);
 }
+// Language-aware text: returns bn or en string
+function lt(bn_text, en_text){ return LANG === 'en' ? en_text : bn_text; }
 
 const BN_M  = ['বৈশাখ','জ্যৈষ্ঠ','আষাঢ়','শ্রাবণ','ভাদ্র','আশ্বিন','কার্তিক','অগ্রহায়ণ','পৌষ','মাঘ','ফাল্গুন','চৈত্র'];
 // Official Bengali calendar day counts (Government of West Bengal / Bangladesh)
@@ -347,7 +385,23 @@ const BN_MD_LEAP = [31,31,31,31,31,30,30,30,30,30,31,30];
 const BN_WD = ['রবিবার','সোমবার','মঙ্গলবার','বুধবার','বৃহস্পতিবার','শুক্রবার','শনিবার'];
 const BN_WD_S = ['রবি','সোম','মঙ্গল','বুধ','বৃহঃ','শুক্র','শনি'];
 const ENG_M  = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+const EN_BN_M = ['Baishakh','Jyaistha','Ashadh','Shraban','Bhadra','Ashwin','Kartik','Agrahayan','Paush','Magh','Falgun','Chaitra'];
+const EN_WD  = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+const EN_WD_S= ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+const EN_TITHIS = [
+  'Pratipada','Dvitiya','Tritiya','Chaturthi','Panchami','Shashthi','Saptami',
+  'Ashtami','Navami','Dashami','Ekadashi','Dvadashi','Trayodashi','Chaturdashi','Purnima',
+  'Pratipada','Dvitiya','Tritiya','Chaturthi','Panchami','Shashthi','Saptami',
+  'Ashtami','Navami','Dashami','Ekadashi','Dvadashi','Trayodashi','Chaturdashi','Amavasya'
+];
+const EN_NAKSH = ['Ashvini','Bharani','Krittika','Rohini','Mrigashira','Ardra','Punarvasu','Pushya','Ashlesha','Magha','Purva Phalguni','Uttara Phalguni','Hasta','Chitra','Swati','Vishakha','Anuradha','Jyeshtha','Mula','Purva Ashadha','Uttara Ashadha','Shravana','Dhanishtha','Shatabhisha','Purva Bhadrapada','Uttara Bhadrapada','Revati'];
+const EN_YOGAS = ['Vishkambha','Priti','Ayushman','Saubhagya','Shobhana','Atiganda','Sukarma','Dhriti','Shula','Ganda','Vriddhi','Dhruva','Vyaghata','Harshana','Vajra','Siddhi','Vyatipata','Variyan','Parigha','Shiva','Siddha','Sadhya','Shubha','Shukla','Brahma','Indra','Vaidhriti'];
+const EN_RITUS = ['Summer','Monsoon','Autumn','Pre-Winter','Winter','Spring'];
+const EN_HI_M = ['Muharram','Safar','Rabi al-Awwal','Rabi al-Thani','Jumada al-Awwal','Jumada al-Thani','Rajab','Shaban','Ramadan','Shawwal','Dhu al-Qadah','Dhu al-Hijjah'];
 const HI_M   = ['মুহররম','সফর','রবিউল আউয়াল','রবিউস সানি','জমাদিউল আউয়াল','জমাদিউস সানি','রজব','শাবান','রমজান','শাওয়াল','জিলকদ','জিলহজ'];
+const RASHIS    = ['মেষ','বৃষ','মিথুন','কর্কট','সিংহ','কন্যা','তুলা','বৃশ্চিক','ধনু','মকর','কুম্ভ','মীন'];
+const EN_RASHIS = ['Aries','Taurus','Gemini','Cancer','Leo','Virgo','Libra','Scorpio','Sagittarius','Capricorn','Aquarius','Pisces'];
+
 
 const TITHIS_30 = [
   'প্রতিপদ','দ্বিতীয়া','তৃতীয়া','চতুর্থী','পঞ্চমী','ষষ্ঠী','সপ্তমী',
@@ -800,82 +854,368 @@ function getMuhurtas(jd, bsMonth, weekday) {
 }
 
 /* ══════════════════════════════════════════════════════
-   FESTIVALS DATABASE (fixed Bengali calendar dates)
+   FESTIVALS ENGINE
+   Hindu festivals are LUNAR (tithi-based) — computed
+   dynamically for each Bengali year using verified
+   astronomical rules (Drik Siddhanta):
+   • Sunrise rule (06:00 IST = 00:30 UTC): most festivals
+   • Noon rule    (12:00 IST = 06:30 UTC): Saraswati Puja
+   • Nishith rule (00:00 IST = 18:30 UTC prev): Shivaratri
+   • Sunrise+1    after trayodashi: Dhanteras
 ══════════════════════════════════════════════════════ */
-const FESTS = [
-  // বৈশাখ (0)
-  {m:0,d:1,name:'পহেলা বৈশাখ — বাংলা নববর্ষ',e:'🎊',t:'tb2',tl:'বাংলা',desc:'মঙ্গল শোভাযাত্রা, বৈশাখী মেলা, হালখাতা। বাংলার প্রধান উৎসব।'},
-  {m:0,d:1,name:'হালখাতা',e:'📒',t:'tb2',tl:'বাংলা',desc:'ব্যবসায়ীদের নতুন হিসাব খাতা খোলার ঐতিহ্যবাহী দিন।'},
-  {m:0,d:3,name:'অক্ষয় তৃতীয়া',e:'🪙',t:'th',tl:'হিন্দু',desc:'অত্যন্ত শুভ দিন। সোনা কেনা, বিবাহ, নতুন কাজ শুরু।'},
-  {m:0,d:11,name:'বিশ্ব বই দিবস',e:'📚',t:'tg',tl:'আন্তর্জাতিক',desc:'পাঠের প্রতি আগ্রহ তৈরির বৈশ্বিক দিবস।'},
-  {m:0,d:14,name:'বুদ্ধ পূর্ণিমা',e:'☸️',t:'th',tl:'হিন্দু',desc:'গৌতম বুদ্ধের জন্ম, জ্ঞানলাভ ও নির্বাণ দিবস।'},
-  {m:0,d:14,name:'পশ্চিমবঙ্গ দিবস',e:'🗺️',t:'tn',tl:'জাতীয়',desc:'পশ্চিমবঙ্গ রাজ্য প্রতিষ্ঠার বার্ষিকী।'},
-  {m:0,d:25,name:'রবীন্দ্র জয়ন্তী',e:'✍️',t:'tb2',tl:'বাংলা',desc:'বিশ্বকবি রবীন্দ্রনাথ ঠাকুরের জন্মজয়ন্তী (২৫শে বৈশাখ)।'},
-  // জ্যৈষ্ঠ (1)
-  {m:1,d:1,name:'জামাই ষষ্ঠী',e:'🍽️',t:'tb2',tl:'বাংলা',desc:'জামাইকে বিশেষ আদর-আপ্যায়নের ঐতিহ্যবাহী উৎসব।'},
-  {m:1,d:11,name:'নজরুল জয়ন্তী',e:'🎵',t:'tb2',tl:'বাংলা',desc:'জাতীয় কবি কাজী নজরুল ইসলামের জন্মজয়ন্তী।'},
-  {m:1,d:14,name:'জ্যৈষ্ঠ পূর্ণিমা',e:'🌕',t:'th',tl:'হিন্দু',desc:'পূর্ণিমায় পুণ্যস্নান ও পূজা।'},
-  {m:1,d:8,name:'রথযাত্রা',e:'🚂',t:'th',tl:'হিন্দু',desc:'ভগবান জগন্নাথের বিশাল রথ টানার মহোৎসব।'},
-  // আষাঢ় (2)
-  {m:2,d:1,name:'রথযাত্রা (আষাঢ়)',e:'🎡',t:'th',tl:'হিন্দু',desc:'রথে জগন্নাথ, বলরাম ও সুভদ্রার মহাশোভাযাত্রা।'},
-  {m:2,d:9,name:'উল্টো রথযাত্রা',e:'🔄',t:'th',tl:'হিন্দু',desc:'গুণ্ডিচা মন্দির থেকে রথের প্রত্যাবর্তন।'},
-  {m:2,d:14,name:'আষাঢ়ী পূর্ণিমা / গুরু পূর্ণিমা',e:'🙏',t:'th',tl:'হিন্দু',desc:'গুরুর প্রতি শ্রদ্ধা নিবেদন। বৌদ্ধ বর্ষাবাস শুরু।'},
-  {m:2,d:15,name:'জাতীয় শোক দিবস',e:'🖤',t:'tn',tl:'জাতীয়',desc:'বঙ্গবন্ধু শেখ মুজিবুর রহমানের শাহাদত বার্ষিকী।'},
-  // শ্রাবণ (3)
-  {m:3,d:1,name:'শ্রাবণ শিব পূজা',e:'🔱',t:'th',tl:'হিন্দু',desc:'শ্রাবণ মাসের প্রতি সোমবার শিবের বিশেষ পূজা।'},
-  {m:3,d:8,name:'নাগ পঞ্চমী',e:'🐍',t:'th',tl:'হিন্দু',desc:'সর্পদেবতার পূজা।'},
-  {m:3,d:14,name:'রাখী বন্ধন',e:'🎀',t:'th',tl:'হিন্দু',desc:'ভাই-বোনের পবিত্র বন্ধনের উৎসব।'},
-  {m:3,d:15,name:'ঝুলন পূর্ণিমা',e:'🎠',t:'th',tl:'হিন্দু',desc:'রাধাকৃষ্ণের ঝুলনের উৎসব।'},
-  // ভাদ্র (4)
-  {m:4,d:3,name:'গণেশ চতুর্থী',e:'🐘',t:'th',tl:'হিন্দু',desc:'বাধা দূরকারী দেবতা গণেশের পূজা।'},
-  {m:4,d:4,name:'জন্মাষ্টমী',e:'🦚',t:'th',tl:'হিন্দু',desc:'শ্রীকৃষ্ণের জন্মদিন। মধ্যরাতে পূজা, উপবাস।'},
-  {m:4,d:5,name:'নন্দোৎসব',e:'🎉',t:'th',tl:'হিন্দু',desc:'কৃষ্ণজন্মের পরের দিন নন্দের আনন্দ উৎসব।'},
-  {m:4,d:13,name:'ভাদ্র সংক্রান্তি',e:'🌾',t:'tb2',tl:'বাংলা',desc:'ভাদ্র মাসের শেষ দিন। পিঠা-পায়েস রান্না।'},
-  {m:4,d:25,name:'বিশ্বকর্মা পূজা',e:'⚙️',t:'th',tl:'হিন্দু',desc:'শিল্প-কারিগরদের দেবতার পূজা।'},
-  // আশ্বিন (5)
-  {m:5,d:1,name:'মহালয়া',e:'🪔',t:'th',tl:'হিন্দু',desc:'দেবীপক্ষের সূচনা। পিতৃতর্পণ। মহিষাসুরমর্দিনী।'},
-  {m:5,d:1,name:'শারদীয়া নবরাত্রি',e:'🌺',t:'th',tl:'হিন্দু',desc:'নয় দিনের দেবী আরাধনার শুরু।'},
-  {m:5,d:6,name:'দুর্গা ষষ্ঠী',e:'🌺',t:'th',tl:'হিন্দু',desc:'দেবীর বোধন। দুর্গা পূজার শুরু।'},
-  {m:5,d:7,name:'দুর্গা সপ্তমী',e:'🏵️',t:'th',tl:'হিন্দু',desc:'কলাবউ স্নান ও নবপত্রিকা পূজা।'},
-  {m:5,d:8,name:'দুর্গা মহাঅষ্টমী',e:'🔥',t:'th',tl:'হিন্দু',desc:'সন্ধিপূজা ও কুমারী পূজা।'},
-  {m:5,d:9,name:'দুর্গা মহানবমী',e:'🌸',t:'th',tl:'হিন্দু',desc:'নবমী পূজা ও হোম।'},
-  {m:5,d:10,name:'বিজয়া দশমী',e:'🎆',t:'th',tl:'হিন্দু',desc:'প্রতিমা বিসর্জন। সিঁদুর খেলা।'},
-  {m:5,d:14,name:'কোজাগরী লক্ষ্মী পূজা',e:'🌝',t:'th',tl:'হিন্দু',desc:'আশ্বিনের পূর্ণিমায় লক্ষ্মী পূজা।'},
-  {m:5,d:18,name:'বিজয় দিবস',e:'🏆',t:'tn',tl:'জাতীয়',desc:'বাংলাদেশের মুক্তিযুদ্ধে বিজয় (১৬ ডিসেম্বর ১৯৭১)।'},
-  // কার্তিক (6)
-  {m:6,d:1,name:'কুমার ষষ্ঠী',e:'🌿',t:'th',tl:'হিন্দু',desc:'সন্তানের মঙ্গল কামনায় উপবাস।'},
-  {m:6,d:13,name:'ধনতেরাস',e:'💛',t:'th',tl:'হিন্দু',desc:'সোনা-রুপা কেনার শুভ দিন।'},
-  {m:6,d:14,name:'কালী পূজা / দীপাবলি',e:'🕯️',t:'th',tl:'হিন্দু',desc:'কালী মায়ের পূজা। আলোর উৎসব।'},
-  {m:6,d:15,name:'ভাই ফোঁটা',e:'🤝',t:'tb2',tl:'বাংলা',desc:'ভাইয়ের কপালে ফোঁটা। দীর্ঘায়ু কামনা।'},
-  {m:6,d:16,name:'ছট পূজা',e:'☀️',t:'th',tl:'হিন্দু',desc:'সূর্যদেবতার আরাধনা।'},
-  {m:6,d:28,name:'কার্তিক পূজা',e:'🦚',t:'th',tl:'হিন্দু',desc:'সেনাপতি দেবতা কার্তিকের পূজা।'},
-  {m:6,d:30,name:'রাস পূর্ণিমা',e:'🌕',t:'th',tl:'হিন্দু',desc:'কৃষ্ণের রাসলীলার উৎসব।'},
-  // অগ্রহায়ণ (7)
-  {m:7,d:1,name:'নবান্ন উৎসব',e:'🌾',t:'tb2',tl:'বাংলা',desc:'নতুন ধান ওঠার উৎসব। পিঠা-পায়েস।'},
-  {m:7,d:10,name:'গীতা জয়ন্তী',e:'📖',t:'th',tl:'হিন্দু',desc:'ভগবদ্গীতার প্রবচন দিবস।'},
-  {m:7,d:19,name:'সংবিধান দিবস',e:'📜',t:'tn',tl:'জাতীয়',desc:'বাংলাদেশের সংবিধান গৃহীত (৪ নভেম্বর ১৯৭২)।'},
-  // পৌষ (8)
-  {m:8,d:1,name:'পৌষ সংক্রান্তি',e:'🍮',t:'tb2',tl:'বাংলা',desc:'পৌষের পিঠা উৎসব।'},
-  {m:8,d:14,name:'পৌষ পার্বণ',e:'🎑',t:'tb2',tl:'বাংলা',desc:'নতুন গুড় ও চালের পিঠার উৎসব।'},
-  {m:8,d:25,name:'বড়দিন — ক্রিসমাস',e:'🎄',t:'tc',tl:'খ্রিস্টান',desc:'যিশু খ্রিস্টের জন্মদিন।'},
-  // মাঘ (9)
-  {m:9,d:1,name:'সরস্বতী পূজা',e:'📚',t:'th',tl:'হিন্দু',desc:'বিদ্যার দেবীর পূজা। ছাত্রছাত্রীদের প্রধান উৎসব।'},
-  {m:9,d:5,name:'বসন্তপঞ্চমী',e:'🌿',t:'th',tl:'হিন্দু',desc:'বসন্তের শুভ সূচনা।'},
-  {m:9,d:15,name:'মাঘ পূর্ণিমা',e:'🌕',t:'th',tl:'হিন্দু',desc:'গঙ্গাস্নান ও দান।'},
-  {m:9,d:21,name:'একুশে ফেব্রুয়ারি — ভাষা দিবস',e:'🌹',t:'tn',tl:'জাতীয়',desc:'ভাষা শহিদদের স্মরণ। আন্তর্জাতিক মাতৃভাষা দিবস।'},
-  {m:9,d:28,name:'মহা শিবরাত্রি',e:'🔱',t:'th',tl:'হিন্দু',desc:'শিবের মহারাত্রি।'},
-  // ফাল্গুন (10)
-  {m:10,d:1,name:'পহেলা ফাল্গুন — বসন্ত উৎসব',e:'🌸',t:'tb2',tl:'বাংলা',desc:'বসন্ত উদযাপন। হলুদ শাড়ি, ফুলের মেলা।'},
-  {m:10,d:6,name:'আন্তর্জাতিক নারী দিবস',e:'♀️',t:'tg',tl:'আন্তর্জাতিক',desc:'নারীর অধিকারের দিবস।'},
-  {m:10,d:14,name:'দোল পূর্ণিমা / হোলি',e:'🎨',t:'th',tl:'হিন্দু',desc:'রঙের উৎসব। আবির খেলা।'},
-  {m:10,d:14,name:'চৈতন্য মহাপ্রভুর জন্মতিথি',e:'🙏',t:'th',tl:'হিন্দু',desc:'বৈষ্ণব মহাপুরুষের জন্মজয়ন্তী।'},
-  {m:10,d:26,name:'স্বাধীনতা দিবস',e:'🇧🇩',t:'tn',tl:'জাতীয়',desc:'বাংলাদেশের স্বাধীনতা ঘোষণা (২৬ মার্চ ১৯৭১)।'},
-  // চৈত্র (11)
-  {m:11,d:3,name:'রামনবমী',e:'🏹',t:'th',tl:'হিন্দু',desc:'ভগবান রামচন্দ্রের জন্মতিথি।'},
-  {m:11,d:10,name:'হনুমান জয়ন্তী',e:'🐒',t:'th',tl:'হিন্দু',desc:'হনুমানের জন্মজয়ন্তী।'},
-  {m:11,d:15,name:'চড়ক পূজা / গাজন',e:'⚡',t:'th',tl:'হিন্দু',desc:'শিবের চড়ক উৎসব। গাজন শোভাযাত্রা।'},
-  {m:11,d:15,name:'চৈত্র সংক্রান্তি',e:'🎋',t:'tb2',tl:'বাংলা',desc:'পুরনো বছর বিদায়। মেলা ও উৎসব।'},
-];
+
+// Tithi at 06:00 IST (00:30 UTC) — standard rule for most festivals
+function getTithiAtSunrise(jdNoon) {
+  return calcTithi(jdNoon - 0.5 + 0.5 / 24).num;
+}
+// Tithi at 12:00 IST (06:30 UTC) — used for Saraswati (puja at noon)
+function getTithiAtNoon(jdNoon) {
+  return calcTithi(jdNoon - 0.5 + 6.5 / 24).num;
+}
+// Tithi at midnight IST (18:30 UTC of same integer JD) — used for Shivaratri nishith
+function getTithiAtNishith(jdNoon) {
+  return calcTithi(jdNoon - 0.5 + 18.5 / 24).num;
+}
+
+// Generic tithi finder: scan from seedJD, using supplied tithiFn
+function findTithiJDWith(tithiTarget, seedJD, tithiFn, preferLast) {
+  preferLast = preferLast || false;
+  let firstFound = null, lastFound = null;
+  for (let off = -5; off <= 55; off++) {
+    const jd = Math.floor(seedJD) + off;
+    if (tithiFn(jd) === tithiTarget) {
+      if (firstFound === null) firstFound = jd;
+      lastFound = jd;
+    } else if (firstFound !== null) break;
+  }
+  if (firstFound === null) return null;
+  return preferLast ? lastFound : firstFound;
+}
+
+// Sunrise-based finder (standard rule)
+function findTithiJD(tithiTarget, seedJD, preferLast) {
+  return findTithiJDWith(tithiTarget, seedJD, getTithiAtSunrise, preferLast);
+}
+// Noon-based finder (Saraswati etc.)
+function findTithiJDNoon(tithiTarget, seedJD, preferLast) {
+  return findTithiJDWith(tithiTarget, seedJD, getTithiAtNoon, preferLast);
+}
+// Nishith-based finder (Shivaratri)
+function findTithiJDNishith(tithiTarget, seedJD, preferLast) {
+  return findTithiJDWith(tithiTarget, seedJD, getTithiAtNishith, preferLast);
+}
+
+// Convert JD to Bengali {y,m,d}
+function jdToBs(jd) {
+  const g = jdToGregorian(jd);
+  return gregorianToBengali(g.y, g.m, g.d);
+}
+
+// Build complete festival list for a given Bengali year (bsY)
+function buildFestsForYear(bsY) {
+  const ceY = bsY + 593; // CE year for Jan-Dec portion
+  const fests = [];
+
+  function add(jd, name, e, t, tl, desc) {
+    if (!jd) return;
+    const bs = jdToBs(jd);
+    if (bs.y === bsY) fests.push({ m: bs.m, d: bs.d, name, e, t, tl, desc });
+  }
+
+  // ── TITHI-BASED HINDU FESTIVALS (verified against Drik Panchang 2025) ──
+
+  // Saraswati Puja = Magh Shukla Panchami (tithi 4) — NOON rule
+  // Panchami must prevail at noon (puja time). Seed: ~10 days before (Jan 22).
+  add(findTithiJDNoon(4, gregorianToJD(ceY, 1, 22), false),
+      'সরস্বতী পূজা — বসন্তপঞ্চমী','📚','th','হিন্দু',
+      'বিদ্যার দেবীর পূজা। মাঘ শুক্লা পঞ্চমী। ছাত্রছাত্রীদের প্রধান উৎসব।');
+
+  // Maha Shivaratri = Falgun Krishna Chaturdashi (tithi 28) — NISHITH rule
+  // Observed on the night when Chaturdashi prevails at Nishith (midnight IST).
+  add(findTithiJDNishith(28, gregorianToJD(ceY, 2, 10), false),
+      'মহা শিবরাত্রি','🔱','th','হিন্দু',
+      'শিবের মহারাত্রি। ফাল্গুন কৃষ্ণপক্ষ চতুর্দশী। উপবাস, রাতভর জাগরণ ও পূজা।');
+
+  // Dol Purnima / Holi = Falgun Purnima (tithi 14) — SUNRISE preferLast
+  const dolJD = findTithiJD(14, gregorianToJD(ceY, 3, 1), true);
+  add(dolJD, 'দোল পূর্ণিমা — হোলি','🎨','th','হিন্দু',
+      'ফাল্গুন পূর্ণিমা। রঙের উৎসব। রাধাকৃষ্ণের দোলযাত্রা। আবির খেলা।');
+  add(dolJD, 'চৈতন্য মহাপ্রভুর আবির্ভাব তিথি','🙏','th','হিন্দু',
+      'শ্রীচৈতন্য মহাপ্রভুর আবির্ভাব তিথি। ফাল্গুন পূর্ণিমা।');
+
+  // Ram Navami = Chaitra Shukla Navami (tithi 8) — SUNRISE
+  add(findTithiJD(8, gregorianToJD(ceY, 3, 22), false),
+      'রামনবমী','🏹','th','হিন্দু',
+      'ভগবান রামচন্দ্রের জন্মতিথি। চৈত্র শুক্লা নবমী।');
+
+  // Hanuman Jayanti = Chaitra Purnima (tithi 14) — SUNRISE preferLast
+  add(findTithiJD(14, gregorianToJD(ceY, 3, 29), true),
+      'হনুমান জয়ন্তী','🐒','th','হিন্দু',
+      'শ্রী হনুমানের জন্মজয়ন্তী। চৈত্র পূর্ণিমা।');
+
+  // Akshaya Tritiya = Vaishakh Shukla Tritiya (tithi 2) — SUNRISE
+  // Seed from Apr 20; tithi 2 first appears at sunrise on correct day.
+  add(findTithiJD(2, gregorianToJD(ceY, 4, 17), false),
+      'অক্ষয় তৃতীয়া','🪙','th','হিন্দু',
+      'অত্যন্ত শুভ দিন। বৈশাখ শুক্লা তৃতীয়া। সোনা কেনা, বিবাহ, নতুন কাজ শুরু।');
+
+  // Buddha Purnima = Vaishakh Purnima (tithi 14) — SUNRISE preferLast
+  add(findTithiJD(14, gregorianToJD(ceY, 4, 28), true),
+      'বুদ্ধ পূর্ণিমা','☸️','th','হিন্দু',
+      'গৌতম বুদ্ধের জন্ম, জ্ঞানলাভ ও মহাপরিনির্বাণ। বৈশাখ পূর্ণিমা।');
+
+  // Rath Yatra = Ashadh Shukla Dvitiya (tithi 1) — SUNRISE
+  const rathJD = findTithiJD(1, gregorianToJD(ceY, 6, 16), false);
+  add(rathJD, 'রথযাত্রা','🎡','th','হিন্দু',
+      'ভগবান জগন্নাথের বিশাল রথ টানার মহোৎসব। আষাঢ় শুক্লা দ্বিতীয়া।');
+  if (rathJD) add(rathJD + 9, 'উল্টো রথযাত্রা','🔄','th','হিন্দু',
+      'গুণ্ডিচা মন্দির থেকে জগন্নাথের প্রত্যাবর্তন। আষাঢ় শুক্লা একাদশী।');
+
+  // Guru Purnima = Ashadh Purnima (tithi 14) — SUNRISE preferLast
+  add(findTithiJD(14, gregorianToJD(ceY, 6, 26), true),
+      'গুরু পূর্ণিমা','🙏','th','হিন্দু',
+      'গুরুর প্রতি শ্রদ্ধা নিবেদন। আষাঢ় পূর্ণিমা। বৌদ্ধ বর্ষাবাস শুরু।');
+
+  // Nag Panchami = Shravan Shukla Panchami (tithi 4) — SUNRISE
+  add(findTithiJD(4, gregorianToJD(ceY, 7, 18), false),
+      'নাগ পঞ্চমী','🐍','th','হিন্দু',
+      'সর্পদেবতার পূজা। শ্রাবণ শুক্লা পঞ্চমী।');
+
+  // Raksha Bandhan = Shravan Purnima (tithi 14) — SUNRISE preferLast
+  add(findTithiJD(14, gregorianToJD(ceY, 7, 25), true),
+      'রাখী বন্ধন','🎀','th','হিন্দু',
+      'ভাই-বোনের পবিত্র বন্ধনের উৎসব। শ্রাবণ পূর্ণিমা।');
+
+  // Janmashtami = Bhadra Krishna Ashtami (tithi 22) — SUNRISE
+  add(findTithiJD(22, gregorianToJD(ceY, 8, 5), false),
+      'জন্মাষ্টমী','🦚','th','হিন্দু',
+      'শ্রীকৃষ্ণের জন্মতিথি। ভাদ্র কৃষ্ণপক্ষ অষ্টমী। মধ্যরাতে পূজা, উপবাস।');
+
+  // Ganesh Chaturthi = Bhadra Shukla Chaturthi (tithi 3) — SUNRISE
+  add(findTithiJD(3, gregorianToJD(ceY, 8, 18), false),
+      'গণেশ চতুর্থী','🐘','th','হিন্দু',
+      'বাধাবিনাশক দেবতা গণেশের পূজা। ভাদ্র শুক্লা চতুর্থী।');
+
+  // Mahalaya = Ashwin Krishna Amavasya (tithi 29) — SUNRISE preferLast
+  add(findTithiJD(29, gregorianToJD(ceY, 9, 8), true),
+      'মহালয়া','🪔','th','হিন্দু',
+      'পিতৃপক্ষ শেষ। আশ্বিন কৃষ্ণপক্ষ অমাবস্যা। দেবীপক্ষের সূচনা। মহিষাসুরমর্দিনী।');
+
+  // Durga Puja — seeded from Mahalaya
+  const mhJD = findTithiJD(29, gregorianToJD(ceY, 9, 8), false) || gregorianToJD(ceY, 9, 19);
+  add(findTithiJD(5,  mhJD + 4, true),  'দুর্গা পূজা — মহাষষ্ঠী','🌺','th','হিন্দু','দেবীর বোধন। শারদীয়া দুর্গাপূজার শুরু। আশ্বিন শুক্লা ষষ্ঠী।');
+  add(findTithiJD(6,  mhJD + 5, false), 'দুর্গা পূজা — মহাসপ্তমী','🏵️','th','হিন্দু','কলাবউ স্নান ও নবপত্রিকা পূজা। আশ্বিন শুক্লা সপ্তমী।');
+  add(findTithiJD(7,  mhJD + 6, false), 'দুর্গা পূজা — মহাঅষ্টমী','🔥','th','হিন্দু','সন্ধিপূজা ও কুমারী পূজা। আশ্বিন শুক্লা অষ্টমী।');
+  add(findTithiJD(8,  mhJD + 7, false), 'দুর্গা পূজা — মহানবমী','🌸','th','হিন্দু','নবমী পূজা ও হোম। আশ্বিন শুক্লা নবমী।');
+  add(findTithiJD(9,  mhJD + 8, true),  'বিজয়া দশমী','🎆','th','হিন্দু','প্রতিমা বিসর্জন। সিঁদুর খেলা। আশ্বিন শুক্লা দশমী।');
+
+  // Kojagari Lakshmi = Ashwin Purnima (tithi 14) — SUNRISE preferLast
+  add(findTithiJD(14, gregorianToJD(ceY, 9, 26), true),
+      'কোজাগরী লক্ষ্মী পূজা','🌝','th','হিন্দু',
+      'আশ্বিন পূর্ণিমায় লক্ষ্মী পূজা। কোজাগর রাত।');
+
+  // Dhanteras = day AFTER last sunrise with Trayodashi (tithi 27)
+  // Traditional: observed on the day Chaturdashi begins = day trayodashi ends at sunrise + 1
+  const dhanteraTray = findTithiJD(27, gregorianToJD(ceY, 10, 6), true);
+  if (dhanteraTray) add(dhanteraTray + 1, 'ধনতেরাস','💛','th','হিন্দু',
+      'কার্তিক কৃষ্ণপক্ষ। সোনা-রুপা কেনার শুভ দিন। ধনবন্তরী পূজা।');
+
+  // Kali Puja / Diwali = Kartik Amavasya (tithi 29) — SUNRISE preferLast
+  add(findTithiJD(29, gregorianToJD(ceY, 10, 8), true),
+      'কালী পূজা — দীপাবলি','🕯️','th','হিন্দু',
+      'কালী মায়ের পূজা। কার্তিক অমাবস্যা। আলোর উৎসব।');
+
+  // Bhai Phota = Kartik Shukla Dvitiya (tithi 1) — SUNRISE preferLast
+  add(findTithiJD(1, gregorianToJD(ceY, 10, 14), true),
+      'ভাই ফোঁটা','🤝','tb2','বাংলা',
+      'ভাইয়ের কপালে ফোঁটা। কার্তিক শুক্লা দ্বিতীয়া। দীর্ঘায়ু কামনা।');
+
+  // Kartik Purnima / Ras Purnima (tithi 14) — SUNRISE preferLast
+  add(findTithiJD(14, gregorianToJD(ceY, 10, 22), true),
+      'কার্তিক পূর্ণিমা — রাস পূর্ণিমা','🌕','th','হিন্দু',
+      'কার্তিক পূর্ণিমা। কৃষ্ণের রাসলীলার উৎসব। দেব দীপাবলি।');
+
+  // Gita Jayanti = Margashirsha Shukla Ekadashi (tithi 10) — SUNRISE
+  add(findTithiJD(10, gregorianToJD(ceY, 11, 18), false),
+      'গীতা জয়ন্তী','📖','th','হিন্দু',
+      'ভগবদ্গীতার প্রবচন দিবস। অগ্রহায়ণ শুক্লা একাদশী।');
+
+  // ── FIXED GREGORIAN → BENGALI ──
+  function fixedGreg(gy, gm, gd, name, e, t, tl, desc) {
+    const bs = gregorianToBengali(gy, gm, gd);
+    if (bs.y === bsY) fests.push({ m: bs.m, d: bs.d, name, e, t, tl, desc });
+  }
+  // Fixed Bengali calendar dates (always same Bengali date)
+  function fixedBS(bm, bd, name, e, t, tl, desc) {
+    fests.push({ m: bm, d: bd, name, e, t, tl, desc });
+  }
+
+  // ── EKADASHI list for the year (tithi 10 = Shukla Ekadashi, 25 = Krishna Ekadashi) ──
+  // Ekadashi = 11th tithi (index 10 in Shukla, index 25 in Krishna)
+  // Add major named Ekadashis
+  const ekadashiSeeds = [
+    { seed: gregorianToJD(ceY, 1, 10),  nameS: 'পুত্রদা একাদশী', nameK: 'ষটতিলা একাদশী' },
+    { seed: gregorianToJD(ceY, 2, 10),  nameS: 'জয়া একাদশী',    nameK: 'বিজয়া একাদশী' },
+    { seed: gregorianToJD(ceY, 3, 10),  nameS: 'আমলকী একাদশী',  nameK: 'পাপমোচনী একাদশী' },
+    { seed: gregorianToJD(ceY, 4, 10),  nameS: 'কামদা একাদশী',   nameK: 'বরুথিনী একাদশী' },
+    { seed: gregorianToJD(ceY, 5, 10),  nameS: 'মোহিনী একাদশী', nameK: 'অপরা একাদশী' },
+    { seed: gregorianToJD(ceY, 6, 10),  nameS: 'নির্জলা একাদশী', nameK: 'যোগিনী একাদশী' },
+    { seed: gregorianToJD(ceY, 7, 10),  nameS: 'দেবশয়নী একাদশী', nameK: 'কামিকা একাদশী' },
+    { seed: gregorianToJD(ceY, 8, 10),  nameS: 'পুত্রদা একাদশী', nameK: 'অজা একাদশী' },
+    { seed: gregorianToJD(ceY, 9, 10),  nameS: 'পার্শ্ব একাদশী', nameK: 'ইন্দিরা একাদশী' },
+    { seed: gregorianToJD(ceY, 10, 10), nameS: 'পাশাঙ্কুশা একাদশী', nameK: 'রমা একাদশী' },
+    { seed: gregorianToJD(ceY, 11, 10), nameS: 'দেবউঠনী একাদশী', nameK: 'উৎপত্তি একাদশী' },
+    { seed: gregorianToJD(ceY, 12, 10), nameS: 'মোক্ষদা একাদশী', nameK: 'সফলা একাদশী' },
+  ];
+  ekadashiSeeds.forEach(({ seed, nameS, nameK }) => {
+    add(findTithiJD(10, seed, false), nameS + ' (একাদশী)','🌿','th','হিন্দু','শুক্লপক্ষ একাদশী উপবাস। বিষ্ণুর আরাধনার পবিত্র তিথি।');
+    add(findTithiJD(25, seed, false), nameK + ' (একাদশী)','🌿','th','হিন্দু','কৃষ্ণপক্ষ একাদশী উপবাস। বিষ্ণুর আরাধনার পবিত্র তিথি।');
+  });
+
+  // ── Auspicious Yoga days (Amrit Siddhi + Sarvartha Siddhi) ──
+  // Amrit Siddhi Yoga: specific weekday + nakshatra combinations
+  // Sarvartha Siddhi: Sunday+Hasta, Monday+Mrigashira, Tuesday+Ashvini, Wednesday+Anuradha,
+  //                   Thursday+Pushya, Friday+Revati, Saturday+Rohini
+  // Sarvartha Siddhi Yoga — full year scan
+  const SARVARTHA_NK_LOC = [12,4,0,16,7,26,3];
+  for (let offS = 0; offS < 366; offS++) {
+    const jdS = Math.floor(gregorianToJD(ceY, 1, 1)) + offS;
+    const gS  = jdToGregorian(jdS);
+    const wdS = new Date(gS.y, gS.m-1, gS.d).getDay();
+    const nakS= calcNakshatra(jdS - 0.5 + 0.5/24);
+    if (nakS.idx === SARVARTHA_NK_LOC[wdS]) {
+      add(jdS, 'সর্বার্থ সিদ্ধি যোগ','⭐','th','হিন্দু','সকল কাজে সাফল্যের বিশেষ শুভ যোগ। শুভ কার্যারম্ভে উত্তম।');
+    }
+  }
+
+  // ── Fixed Bengali calendar dates ──
+  fixedBS(0, 1,  'পহেলা বৈশাখ — বাংলা নববর্ষ','🎊','tb2','বাংলা','মঙ্গল শোভাযাত্রা, বৈশাখী মেলা, হালখাতা। বাংলার সবচেয়ে বড় উৎসব।');
+  fixedBS(0, 1,  'হালখাতা','📒','tb2','বাংলা','ব্যবসায়ীদের নতুন হিসাব খাতা খোলার ঐতিহ্যবাহী দিন।');
+  fixedBS(0, 25, 'রবীন্দ্র জয়ন্তী','✍️','tb2','বাংলা','বিশ্বকবি রবীন্দ্রনাথ ঠাকুরের জন্মজয়ন্তী (২৫শে বৈশাখ)।');
+  fixedBS(1, 11, 'নজরুল জয়ন্তী','🎵','tb2','বাংলা','জাতীয় কবি কাজী নজরুল ইসলামের জন্মজয়ন্তী (১১ই জ্যৈষ্ঠ)।');
+  fixedBS(4, 31, 'বিশ্বকর্মা পূজা','⚙️','th','হিন্দু','শিল্প-কারিগরদের দেবতার পূজা। ভাদ্রের শেষ দিন (১৭ সেপ্টেম্বর)।');
+
+  // ── Shubh Vivah (auspicious marriage) dates ──
+  // Traditional criteria: Shukla paksha, tithis 2/3/5/7/10/11/13, nakshatras Rohini/Mrigashira/Hasta/Chitra/Swati/Anuradha/Uttara Phalguni/Uttara Ashadha/Uttara Bhadrapada/Revati
+  // Months allowed: Agrahayan, Phalgun, Vaishakh, Jyaistha, Magh (avoided: Ashwin, Kartik, Paush)
+  const VIVAH_TITHIS = new Set([1,2,4,6,9,10,12]);
+  const VIVAH_NAKSH  = new Set([3,4,11,12,14,16,26]);
+  const VIVAH_MONTHS_BN = new Set([0,1,5,9,10]); // Vaishakh,Jyaistha,Ashwin,Magh,Falgun — approx
+  for (let off = 0; off < 365; off++) {
+    const jd = Math.floor(gregorianToJD(ceY, 4, 14)) + off;
+    const t2 = calcTithi(jd - 0.5 + 0.5/24);
+    const nak2 = calcNakshatra(jd - 0.5 + 0.5/24);
+    const bs2 = jdToBs(jd);
+    if (bs2.y === bsY &&
+        t2.num < 15 && VIVAH_TITHIS.has(t2.num) &&
+        VIVAH_NAKSH.has(nak2.idx) &&
+        VIVAH_MONTHS_BN.has(bs2.m)) {
+      const g3 = jdToGregorian(jd);
+      const wd3 = new Date(g3.y, g3.m-1, g3.d).getDay();
+      if (wd3 !== 0) { // avoid Sunday
+        add(jd, 'শুভ বিবাহ মুহূর্ত','💍','th','হিন্দু',`শুভ বিবাহের জন্য উত্তম তিথি-নক্ষত্র যোগ। তিথি: ${TITHIS_30[t2.num]}, নক্ষত্র: ${NAKSH[nak2.idx]}।`);
+      }
+    }
+  }
+
+  // ── Griha Pravesh (housewarming) auspicious dates ──
+  // Criteria: Shukla paksha, tithis 2/3/5/10/11/13, nakshatras Rohini/Mrigashira/Pushya/Hasta/Chitra/Anuradha/Uttara Phalguni/Uttara Bhadrapada/Revati, months avoided: Ashwin
+  const GRIH_NAKSH = new Set([3,4,7,12,13,16,11,25,26]);
+  for (let off2 = 0; off2 < 365; off2++) {
+    const jd2 = Math.floor(gregorianToJD(ceY, 4, 14)) + off2;
+    const t3 = calcTithi(jd2 - 0.5 + 0.5/24);
+    const nak3 = calcNakshatra(jd2 - 0.5 + 0.5/24);
+    const bs3 = jdToBs(jd2);
+    if (bs3.y === bsY &&
+        t3.num < 15 && VIVAH_TITHIS.has(t3.num) &&
+        GRIH_NAKSH.has(nak3.idx) &&
+        bs3.m !== 5) { // not Ashwin
+      add(jd2, 'গৃহপ্রবেশ মুহূর্ত','🏠','th','হিন্দু',`নতুন বাড়িতে প্রবেশের শুভ তিথি। তিথি: ${TITHIS_30[t3.num]}, নক্ষত্র: ${NAKSH[nak3.idx]}।`);
+    }
+  }
+  fixedBS(10, 1, 'পহেলা ফাল্গুন — বসন্ত উৎসব','🌸','tb2','বাংলা','বসন্ত উদযাপন। হলুদ শাড়ি, ফুলের মেলা।');
+  fixedBS(11, 30,'চৈত্র সংক্রান্তি','🎋','tb2','বাংলা','পুরনো বছর বিদায়। মেলা, চড়ক পূজা ও গাজন উৎসব।');
+
+  // ── Fixed Gregorian dates (national / international) ──
+  // ── Islamic festivals (Hijri-based, approximate Gregorian conversion) ──
+  // Eid ul-Fitr = 1 Shawwal (Hijri month 10) — approximate
+  function hijriToJD(hy, hm, hd) {
+    const N = Math.floor((11*hy + 3) / 30) + 354*(hy-1) + 30*(hm-1) - Math.floor((hm-1)/2) + hd + 1948440 - 385;
+    return N;
+  }
+  // Approximate Hijri year for this CE year
+  const hYear = Math.floor((ceY - 622) * (33/32)) + 1;
+  const eidFitrJD = hijriToJD(hYear, 10, 1);
+  add(eidFitrJD, 'ঈদুল ফিতর — রোজার ঈদ','🌙','tm','ইসলাম','রমজান মাসের শেষে ঈদুল ফিতর উদযাপন। শাওয়ালের ১ তারিখ।');
+  const eidAdhaJD = hijriToJD(hYear, 12, 10);
+  add(eidAdhaJD, 'ঈদুল আযহা — কুরবানির ঈদ','🐑','tm','ইসলাম','জিলহজ মাসের ১০ তারিখ। কুরবানি ও হজ্জের উৎসব।');
+  const shabbEBaratJD = hijriToJD(hYear, 8, 15);
+  add(shabbEBaratJD, 'শবে বরাত','🕌','tm','ইসলাম','শাবান মাসের ১৫তম রাত। ক্ষমা ও রহমতের রাত।');
+  const shabbEQadrJD = hijriToJD(hYear, 9, 27);
+  add(shabbEQadrJD, 'শবে কদর','⭐','tm','ইসলাম','রমজানের ২৭তম রাত। লাইলাতুল কদর — হাজার মাসের চেয়ে উত্তম।');
+  const eidMiladJD = hijriToJD(hYear, 3, 12);
+  add(eidMiladJD, 'ঈদে মিলাদুন্নবী','🌟','tm','ইসলাম','নবী মুহাম্মদ (সা.)-এর জন্মদিন। রবিউল আউয়াল ১২।');
+  // Muharram / Ashura
+  const ashuraJD = hijriToJD(hYear, 1, 10);
+  add(ashuraJD, 'আশুরা — মহররম','🖤','tm','ইসলাম','মহররমের ১০ তারিখ। হজরত ইমাম হোসেনের শাহাদত।');
+
+  // ── Christian festivals (fixed Gregorian) ──
+  // Easter (approximate — Western)
+  function easterJD(y) {
+    const a=y%19, b=Math.floor(y/100), c=y%100, d=Math.floor(b/4), e=b%4;
+    const f=Math.floor((b+8)/25), g=Math.floor((b-f+1)/3), h=(19*a+b-d-g+15)%30;
+    const i=Math.floor(c/4), k=c%4, l=(32+2*e+2*i-h-k)%7;
+    const m=Math.floor((a+11*h+22*l)/451);
+    const month=Math.floor((h+l-7*m+114)/31), day=((h+l-7*m+114)%31)+1;
+    return gregorianToJD(y, month, day);
+  }
+  add(easterJD(ceY), 'ইস্টার সানডে — পুনরুত্থান দিবস','✝️','tc','খ্রিস্টান','যিশু খ্রিস্টের পুনরুত্থান উদযাপন।');
+  add(easterJD(ceY)-2, 'গুড ফ্রাইডে','✝️','tc','খ্রিস্টান','যিশু খ্রিস্টের ক্রুশবিদ্ধ হওয়ার দিন।');
+
+  fixedGreg(ceY,   2, 21, 'একুশে ফেব্রুয়ারি — আন্তর্জাতিক মাতৃভাষা দিবস','🌹','tn','জাতীয়','ভাষা শহিদদের স্মরণ। ১৯৫২ সালের ভাষা আন্দোলন।');
+  fixedGreg(ceY,   3,  8, 'আন্তর্জাতিক নারী দিবস','♀️','tg','আন্তর্জাতিক','নারীর অধিকার ও মর্যাদার দিবস।');
+  fixedGreg(ceY,   4, 23, 'বিশ্ব বই দিবস','📚','tg','আন্তর্জাতিক','পাঠের প্রতি আগ্রহ তৈরির বৈশ্বিক দিবস।');
+  fixedGreg(ceY,   3, 26, 'স্বাধীনতা দিবস (বাংলাদেশ)','🇧🇩','tn','জাতীয়','বাংলাদেশের স্বাধীনতা ঘোষণা (২৬ মার্চ ১৯৭১)।');
+  fixedGreg(ceY,  12, 16, 'বিজয় দিবস (বাংলাদেশ)','🏆','tn','জাতীয়','বাংলাদেশের মুক্তিযুদ্ধে বিজয় (১৬ ডিসেম্বর ১৯৭১)।');
+  fixedGreg(ceY,  12, 25, 'বড়দিন — ক্রিসমাস','🎄','tc','খ্রিস্টান','যিশু খ্রিস্টের জন্মদিন।');
+  // ── West Bengal / India specific ──
+  fixedGreg(ceY,  8, 15, 'ভারতের স্বাধীনতা দিবস','🇮🇳','tn','জাতীয়','ভারতের স্বাধীনতা (১৫ আগস্ট ১৯৪৭)।');
+  fixedGreg(ceY,  1, 26, 'ভারতের প্রজাতন্ত্র দিবস','🇮🇳','tn','জাতীয়','ভারতের সংবিধান গৃহীত (২৬ জানুয়ারি ১৯৫০)।');
+  fixedGreg(ceY,  5,  9, 'রবীন্দ্র জয়ন্তী','📖','tb2','বাংলা','কবিগুরু রবীন্দ্রনাথ ঠাকুরের জন্মজয়ন্তী। ২৫ বৈশাখ।');
+  fixedGreg(ceY,  5, 22, 'নজরুল জয়ন্তী','🎵','tb2','বাংলা','বিদ্রোহী কবি কাজী নজরুল ইসলামের জন্মজয়ন্তী।');
+  fixedGreg(ceY+1, 8, 15, 'জাতীয় শোক দিবস (বাংলাদেশ)','🖤','tn','জাতীয়','বঙ্গবন্ধু শেখ মুজিবুর রহমানের শাহাদত বার্ষিকী।');
+  fixedGreg(ceY+1,11,  4, 'সংবিধান দিবস (বাংলাদেশ)','📜','tn','জাতীয়','বাংলাদেশের সংবিধান গৃহীত (৪ নভেম্বর ১৯৭২)।');
+
+  fixedBS(7, 1, 'নবান্ন উৎসব','🌾','tb2','বাংলা','নতুন ধান ওঠার আনন্দের উৎসব। পিঠা-পায়েস।');
+  fixedBS(8, 14,'পৌষ পার্বণ','🎑','tb2','বাংলা','নতুন গুড় ও চালের পিঠার উৎসব। মকর সংক্রান্তি।');
+
+  // ── Pradosha Vrata (Trayodashi tithi, 13th — both paksha) ──
+  // Observed on Trayodashi (tithi 12 = Shukla, 27 = Krishna)
+  const pradoshaSeeds = [1,2,3,4,5,6,7,8,9,10,11,12].map(m => gregorianToJD(ceY, m, 10));
+  pradoshaSeeds.forEach(seed => {
+    add(findTithiJD(12, seed, false), 'শুক্ল প্রদোষ ব্রত','🌙','th','হিন্দু','শুক্লপক্ষ ত্রয়োদশী — শিবের প্রদোষ ব্রত।');
+    add(findTithiJD(27, seed, false), 'কৃষ্ণ প্রদোষ ব্রত','🌙','th','হিন্দু','কৃষ্ণপক্ষ ত্রয়োদশী — শিবের প্রদোষ ব্রত।');
+  });
+
+  // ── Sankat Chaturthi / Vinayaka Chaturthi (monthly Ganesh) ──
+  // Krishna Chaturthi (tithi 18+1=19? no: tithi 3 = Shukla, 18 = Krishna Chaturthi)
+  pradoshaSeeds.forEach(seed => {
+    add(findTithiJD(3,  seed, false), 'বিনায়ক চতুর্থী','🐘','th','হিন্দু','শুক্লপক্ষ চতুর্থী — গণেশ পূজার মাসিক ব্রত।');
+    add(findTithiJD(18, seed, false), 'সংকষ্ট চতুর্থী','🐘','th','হিন্দু','কৃষ্ণপক্ষ চতুর্থী — সংকটমোচন গণেশের ব্রত।');
+  });
+
+  fests.sort((a, b) => a.m !== b.m ? a.m - b.m : a.d - b.d);
+  return fests;
+}
+
+// Cache fests per year to avoid recomputing
+const _festCache = {};
+function getFests(bsY) {
+  if (!_festCache[bsY]) _festCache[bsY] = buildFestsForYear(bsY);
+  return _festCache[bsY];
+}
+
+
 
 /* ══════════════════════════════════════════════════════
    STATE
@@ -888,15 +1228,16 @@ let TODAY_BS = { y: 1431, m: 0, d: 1 };
 ══════════════════════════════════════════════════════ */
 function renderGrid() {
   const { y: bY, m: bM } = SEL;
-  document.getElementById('mname').textContent = BN_M[bM];
+  document.getElementById('mname').textContent = LANG === 'en' ? EN_BN_M[bM] : BN_M[bM];
   const g1 = bengaliToGregorian(bY, bM, 1);
   const ceStart = g1.y;
-  document.getElementById('myear').textContent =
-    `${bn(bY)} বঙ্গাব্দ • ${bn(ceStart)} খ্রিস্টাব্দ`;
+  document.getElementById('myear').textContent = LANG === 'en'
+    ? `${bn(bY)} BS • ${bn(ceStart)} CE`
+    : `${bn(bY)} বঙ্গাব্দ • ${bn(ceStart)} খ্রিস্টাব্দ`;
 
-  // Festival map
+  // Festival map (dynamic, year-aware)
   const fmap = {};
-  FESTS.filter(f => f.m === bM).forEach(f => {
+  getFests(bY).filter(f => f.m === bM).forEach(f => {
     if (!fmap[f.d]) fmap[f.d] = [];
     fmap[f.d].push(f);
   });
@@ -937,7 +1278,7 @@ function renderGrid() {
 
     if (isToday) {
       const lbl = document.createElement('span');
-      lbl.className = 'tod-lbl'; lbl.textContent = 'আজ';
+      lbl.className = 'tod-lbl'; lbl.textContent = LANG==='en'?'Today':'আজ';
       c.appendChild(lbl);
     }
 
@@ -996,45 +1337,64 @@ function renderDayDetail() {
   const ritu = RITUS[Math.floor(bM / 2)];
   const ayana = bM >= 3 && bM <= 8 ? 'দক্ষিণায়ণ' : 'উত্তরায়ণ';
 
-  // Festivals for this day
-  const fests = FESTS.filter(f => f.m === bM && f.d === bD);
+  // Festivals for this day (dynamic, year-aware)
+  const fests = getFests(bY).filter(f => f.m === bM && f.d === bD);
   // Upcoming
   const upcoming = [];
   for (let delta = 1; delta <= 30 && upcoming.length < 5; delta++) {
     let nm = bM, nd = bD + delta;
     while (nd > getBSMonthDays(bY, nm)) { nd -= getBSMonthDays(bY, nm); nm = (nm + 1) % 12; }
-    FESTS.filter(f => f.m === nm && f.d === nd)
+    getFests(bY).filter(f => f.m === nm && f.d === nd)
          .forEach(f => upcoming.push({ ...f, offset: delta, nm, nd }));
   }
   const upUniq = upcoming.filter((v, i, a) => a.findIndex(x => x.name === v.name) === i).slice(0, 4);
+
+  const isEn2 = LANG === 'en';
+  const tN = isEn2 ? EN_TITHIS[tithi.num] : tithiName;
+  const pN = isEn2 ? (tithi.num < 15 ? 'Shukla Paksha' : 'Krishna Paksha') : paksha;
+  const rN = isEn2 ? EN_RITUS[Math.floor(bM/2)] : ritu;
+  const aN = isEn2 ? (bM>=3&&bM<=8?'Dakshinayana':'Uttarayana') : ayana;
+  const wdN = isEn2 ? EN_WD[wd] : BN_WD[wd];
+  const mN = isEn2 ? EN_BN_M[bM] : BN_M[bM];
+  const hiMN = isEn2 ? EN_HI_M[hijri.m-1] : HI_M[hijri.m-1];
+  const nakN = isEn2 ? EN_NAKSH[nak.idx] : nak.name;
+  const yogaN = isEn2 ? EN_YOGAS[yoga.idx] : yoga.name;
+  // Chandrashtama indicator
+  const moonRashiIdx2 = Math.floor(tithi.mlon / 30) % 12;
+  const moonRashiName = isEn2 ? EN_RASHIS[moonRashiIdx2] : RASHIS[moonRashiIdx2];
+  // Amrit Siddhi / Sarvartha Siddhi detection
+  const SARV_NK2 = [12,4,0,16,7,26,3];
+  const isSarvartha = calcNakshatra(jd - 0.5 + 0.5/24).idx === SARV_NK2[wd];
+  const specialYoga = isSarvartha ? (isEn2 ? '⭐ Sarvartha Siddhi Yoga' : '⭐ সর্বার্থ সিদ্ধি যোগ') : '';
 
   const panel = document.getElementById('ddet');
   panel.innerHTML = `
     <div class="ddet-hdr">
       <div class="dbn">${bn(bD)}</div>
       <div class="dinfo">
-        <div class="dwd">${BN_WD[wd]}, ${BN_M[bM]} ${bn(bY)}</div>
+        <div class="dwd">${wdN}, ${mN} ${bn(bY)}</div>
         <div class="dsub">${g.d} ${ENG_M[g.m - 1]} ${g.y}</div>
-        <div class="dsub">${paksha} • ${tithiName} তিথি</div>
-        <div class="dsub">${ritu} ঋতু • ${ayana}</div>
+        <div class="dsub">${pN} • ${tN} ${isEn2?'Tithi':'তিথি'}</div>
+        <div class="dsub">${rN} ${isEn2?'Season':'ঋতু'} • ${aN}${specialYoga?' • <span style="color:#f0c848">'+specialYoga+'</span>':''}</div>
       </div>
       <div class="dmoon">${moonPhase}</div>
     </div>
     <div class="dbody">
-      <div class="dr"><span class="dk">তিথি</span><span class="dv gold">${tithiName} (${paksha})</span></div>
-      <div class="dr"><span class="dk">তিথি ক্রমাঙ্ক</span><span class="dv">${bn(tithi.num + 1)}/৩০</span></div>
-      <div class="dr"><span class="dk">নক্ষত্র</span><span class="dv">${nak.name}</span></div>
-      <div class="dr"><span class="dk">যোগ</span><span class="dv">${yoga.name}</span></div>
-      <div class="dr"><span class="dk">করণ</span><span class="dv">${kar.name}</span></div>
-      <div class="dr"><span class="dk">ঋতু / অয়ন</span><span class="dv purp">${ritu} ঋতু • ${ayana}</span></div>
-      <div class="dr"><span class="dk">সূর্যের দ্রাঘিমা</span><span class="dv">${bnf(tithi.slon, 2)}°</span></div>
-      <div class="dr"><span class="dk">চন্দ্রের দ্রাঘিমা</span><span class="dv">${bnf(tithi.mlon, 2)}°</span></div>
-      <div class="dr"><span class="dk">হিজরি তারিখ</span><span class="dv purp">${bn(hijri.d)} ${HI_M[hijri.m - 1]} ${bn(hijri.y)}</span></div>
-      <div class="dr"><span class="dk">শকাব্দ</span><span class="dv">${bn(bY - 421)} শকাব্দ</span></div>
-      <div class="dr"><span class="dk">জুলিয়ান দিন</span><span class="dv blue">${bn(jd)}</span></div>
+      <div class="dr"><span class="dk">${isEn2?'Tithi':'তিথি'}</span><span class="dv gold">${tN} (${pN})</span></div>
+      <div class="dr"><span class="dk">${isEn2?'Tithi No.':'তিথি ক্রমাঙ্ক'}</span><span class="dv">${bn(tithi.num + 1)}/৩০</span></div>
+      <div class="dr"><span class="dk">${isEn2?'Nakshatra':'নক্ষত্র'}</span><span class="dv">${nakN}</span></div>
+      <div class="dr"><span class="dk">${isEn2?'Yoga':'যোগ'}</span><span class="dv">${yogaN}</span></div>
+      <div class="dr"><span class="dk">${isEn2?'Karana':'করণ'}</span><span class="dv">${kar.name}</span></div>
+      <div class="dr"><span class="dk">${isEn2?'Moon Rashi':'চন্দ্র রাশি'}</span><span class="dv blue">${moonRashiName}</span></div>
+      <div class="dr"><span class="dk">${isEn2?'Season / Ayana':'ঋতু / অয়ন'}</span><span class="dv purp">${rN} ${isEn2?'Season':'ঋতু'} • ${aN}</span></div>
+      <div class="dr"><span class="dk">${isEn2?'Sun Longitude':'সূর্যের দ্রাঘিমা'}</span><span class="dv">${bnf(tithi.slon, 2)}°</span></div>
+      <div class="dr"><span class="dk">${isEn2?'Moon Longitude':'চন্দ্রের দ্রাঘিমা'}</span><span class="dv">${bnf(tithi.mlon, 2)}°</span></div>
+      <div class="dr"><span class="dk">${isEn2?'Hijri Date':'হিজরি তারিখ'}</span><span class="dv purp">${bn(hijri.d)} ${hiMN} ${bn(hijri.y)}</span></div>
+      <div class="dr"><span class="dk">${isEn2?'Shaka Era':'শকাব্দ'}</span><span class="dv">${bn(bY - 421)} ${isEn2?'Shaka':'শকাব্দ'}</span></div>
+      <div class="dr"><span class="dk">${isEn2?'Julian Day':'জুলিয়ান দিন'}</span><span class="dv blue">${bn(jd)}</span></div>
       <div class="sunrow">
-        <div class="sunbox"><div class="si">🌅</div><div class="sl">সূর্যোদয়</div><div class="sv">${sun.rise || 'অজ্ঞাত'}</div></div>
-        <div class="sunbox"><div class="si">🌇</div><div class="sl">সূর্যাস্ত</div><div class="sv">${sun.set || 'অজ্ঞাত'}</div></div>
+        <div class="sunbox"><div class="si">🌅</div><div class="sl">${isEn2?'Sunrise':'সূর্যোদয়'}</div><div class="sv">${sun.rise || (isEn2?'Unknown':'অজ্ঞাত')}</div></div>
+        <div class="sunbox"><div class="si">🌇</div><div class="sl">${isEn2?'Sunset':'সূর্যাস্ত'}</div><div class="sv">${sun.set || (isEn2?'Unknown':'অজ্ঞাত')}</div></div>
       </div>
       ${fests.length ? `
       <div class="fbox">
@@ -1076,25 +1436,48 @@ function renderPanchang() {
   const ayana = bM >= 3 && bM <= 8 ? 'দক্ষিণায়ণ' : 'উত্তরায়ণ';
   const hijri = gregorianToHijri(g.y, g.m, g.d);
 
-  document.getElementById('ptitle').textContent = `পঞ্চাঙ্গ — ${BN_M[bM]} ${bn(bD)}, ${bn(bY)}`;
+  const mStr = LANG === 'en' ? EN_BN_M[bM] : BN_M[bM];
+  document.getElementById('ptitle').textContent = LANG === 'en'
+    ? `Panchang — ${mStr} ${bn(bD)}, ${bn(bY)}`
+    : `পঞ্চাঙ্গ — ${mStr} ${bn(bD)}, ${bn(bY)}`;
+  const isEn = LANG === 'en';
+  const tithiDisp  = isEn ? EN_TITHIS[tithi.num] : TITHIS_30[tithi.num];
+  const pakshaDisp = isEn ? (tithi.num < 15 ? 'Shukla Paksha' : 'Krishna Paksha') : (tithi.num < 15 ? 'শুক্লপক্ষ' : 'কৃষ্ণপক্ষ');
+  const nakDisp    = isEn ? EN_NAKSH[nak.idx] : nak.name;
+  const yogaDisp   = isEn ? EN_YOGAS[yoga.idx] : yoga.name;
+  const wdDisp     = isEn ? EN_WD[wd] : BN_WD[wd];
+  // Chandrashtama: moon is 8 nakshatras ahead of birth nakshatra — show current nakshatra for awareness
+  const chandrashtamaNote = '';
   document.getElementById('pgrid').innerHTML = [
-    { k: 'তিথি', v: TITHIS_30[tithi.num] },
-    { k: 'পক্ষ', v: tithi.num < 15 ? 'শুক্লপক্ষ' : 'কৃষ্ণপক্ষ' },
-    { k: 'নক্ষত্র', v: nak.name },
-    { k: 'যোগ', v: yoga.name },
-    { k: 'করণ', v: kar.name },
-    { k: 'বার', v: BN_WD[wd] },
+    { k: isEn?'Tithi':'তিথি',       v: tithiDisp },
+    { k: isEn?'Paksha':'পক্ষ',       v: pakshaDisp },
+    { k: isEn?'Nakshatra':'নক্ষত্র', v: nakDisp },
+    { k: isEn?'Yoga':'যোগ',           v: yogaDisp },
+    { k: isEn?'Karana':'করণ',         v: isEn ? kar.name : kar.name },
+    { k: isEn?'Weekday':'বার',         v: wdDisp },
   ].map(p => `<div class="pi"><span class="pik">${p.k}</span><span class="piv">${p.v}</span></div>`).join('');
 
+  const moonRashiIdx = Math.floor(tithi.mlon / 30) % 12;
+  const sunRashiIdx  = Math.floor(tithi.slon / 30) % 12;
+  const rituDisp = isEn ? EN_RITUS[Math.floor(bM/2)] : ritu;
+  const ayanaDisp = isEn ? (bM>=3&&bM<=8?'Dakshinayana':'Uttarayana') : ayana;
+  const hiMonthDisp = isEn ? EN_HI_M[hijri.m-1] : HI_M[hijri.m-1];
+
+  // WB variant: 1 Baishakh = 15 April (Bengali Sanatan)
+  const wbDay = REGION === 'WB' ? (bD === 1 && bM === 0 ? '(WB: ১৫ এপ্রিল)' : '') : '';
+
   document.getElementById('vdt').innerHTML = [
-    { k: 'বাংলা তারিখ', v: `${bn(bD)} ${BN_M[bM]}, ${bn(bY)}`, c: 'gold' },
-    { k: 'ইংরেজি তারিখ', v: `${g.d} ${ENG_M[g.m - 1]} ${g.y}`, c: '' },
-    { k: 'হিজরি তারিখ', v: `${bn(hijri.d)} ${HI_M[hijri.m - 1]} ${bn(hijri.y)}`, c: 'purp' },
-    { k: 'শকাব্দ', v: `${bn(bY - 421)} শকাব্দ`, c: '' },
-    { k: 'বার', v: BN_WD[wd], c: 'gold' },
-    { k: 'ঋতু', v: ritu + ' ঋতু', c: '' },
-    { k: 'অয়ন', v: ayana, c: '' },
-    { k: 'জুলিয়ান দিন', v: bn(jd), c: 'blue' },
+    { k: isEn?'Bengali Date':'বাংলা তারিখ',   v: `${bn(bD)} ${isEn?EN_BN_M[bM]:BN_M[bM]}, ${bn(bY)}`, c: 'gold' },
+    { k: isEn?'English Date':'ইংরেজি তারিখ', v: `${g.d} ${ENG_M[g.m - 1]} ${g.y}`, c: '' },
+    { k: isEn?'Hijri Date':'হিজরি তারিখ',    v: `${bn(hijri.d)} ${hiMonthDisp} ${bn(hijri.y)}`, c: 'purp' },
+    { k: isEn?'Shaka Era':'শকাব্দ',            v: `${bn(bY - 421)} ${isEn?'Shaka':'শকাব্দ'}`, c: '' },
+    { k: isEn?'Weekday':'বার',                 v: isEn?EN_WD[wd]:BN_WD[wd], c: 'gold' },
+    { k: isEn?'Season':'ঋতু',                  v: rituDisp + (isEn?' Season':' ঋতু'), c: '' },
+    { k: isEn?'Ayana':'অয়ন',                   v: ayanaDisp, c: '' },
+    { k: isEn?'Sun Sign':'সূর্য রাশি', v: `${bnf(tithi.slon,1)}° (${isEn?EN_RASHIS[sunRashiIdx]:RASHIS[sunRashiIdx]})`, c: '' },
+    { k: isEn?'Moon Sign':'চন্দ্র রাশি', v: `${bnf(tithi.mlon,1)}° (${isEn?EN_RASHIS[moonRashiIdx]:RASHIS[moonRashiIdx]})`, c:'blue' },
+    { k: isEn?'Moon Nakshatra':'চন্দ্র নক্ষত্র', v: isEn?EN_NAKSH[nak.idx]:nak.name, c: '' },
+    { k: isEn?'Julian Day':'জুলিয়ান দিন',       v: bn(jd), c: 'blue' },
   ].map(r => `<div class="vr"><span class="vrk">${r.k}</span><span class="vrv ${r.c}">${r.v}</span></div>`).join('');
 }
 
@@ -1130,9 +1513,10 @@ function renderMuhurtas() {
 ══════════════════════════════════════════════════════ */
 let activeFM = -1;
 function buildTabs() {
+  const allLabel = LANG==='en' ? 'All Months' : 'সব মাস';
   document.getElementById('mtabs').innerHTML =
-    `<button class="mtab on" onclick="showFM(-1,this)">সব মাস</button>` +
-    BN_M.map((m, i) => `<button class="mtab" onclick="showFM(${i},this)">${m}</button>`).join('');
+    `<button class="mtab on" onclick="showFM(-1,this)">${allLabel}</button>` +
+    BN_M.map((m, i) => `<button class="mtab" onclick="showFM(${i},this)">${LANG==='en'?EN_BN_M[i]:m}</button>`).join('');
 }
 function showFM(idx, btn) {
   activeFM = idx;
@@ -1145,7 +1529,7 @@ function filterF(q = '') {
   const cont = document.getElementById('fcont');
   cont.innerHTML = '';
   const groups = {};
-  FESTS.forEach(f => {
+  getFests(SEL.y).forEach(f => {
     if (activeFM !== -1 && f.m !== activeFM) return;
     if (ql && !f.name.toLowerCase().includes(ql) && !f.desc.toLowerCase().includes(ql) && !f.tl.includes(ql)) return;
     if (!groups[f.m]) groups[f.m] = [];
@@ -1158,7 +1542,7 @@ function filterF(q = '') {
     sec.innerHTML = `
       <div class="fmhdr" onclick="toggleAcc(this)">
         <span class="fmic">${M_ICO[mi]}</span>
-        <span class="fmn">${BN_M[mi]}</span>
+        <span class="fmn">${LANG==='en'?EN_BN_M[mi]:BN_M[mi]}</span>
         <span class="fmc">${fests.length}</span>
         <span class="fmar">▼</span>
       </div>
@@ -1175,10 +1559,42 @@ function filterF(q = '') {
   if (!total) {
     const d = document.createElement('div');
     d.style.cssText = 'padding:1.2rem;text-align:center;color:var(--text2);font-size:.78rem';
-    d.textContent = 'কোনো উৎসব পাওয়া যায়নি';
+    d.textContent = LANG==='en' ? 'No festivals found' : 'কোনো উৎসব পাওয়া যায়নি';
     cont.appendChild(d);
   }
 }
+function toggleDayDet() {
+  const body  = document.getElementById('dayDetBody');
+  const arrow = document.getElementById('dayDetArrow');
+  const open  = !body.classList.contains('hidden');
+  body.classList.toggle('hidden', open);
+  arrow.style.transform = open ? 'rotate(-90deg)' : '';
+}
+
+function togglePanch() {
+  const body  = document.getElementById('panchBody');
+  const arrow = document.getElementById('panchArrow');
+  const open  = !body.classList.contains('hidden');
+  body.classList.toggle('hidden', open);
+  arrow.style.transform = open ? 'rotate(-90deg)' : '';
+}
+
+function toggleFest() {
+  const body  = document.getElementById('festBody');
+  const arrow = document.getElementById('festArrow');
+  const open  = !body.classList.contains('hidden');
+  body.classList.toggle('hidden', open);
+  arrow.style.transform = open ? 'rotate(-90deg)' : '';
+}
+
+function toggleMuh() {
+  const body  = document.getElementById('muhBody');
+  const arrow = document.getElementById('muhArrow');
+  const open  = !body.classList.contains('hidden');
+  body.classList.toggle('hidden', open);
+  arrow.style.transform = open ? 'rotate(-90deg)' : '';
+}
+
 function toggleAcc(hdr) {
   const body = hdr.nextElementSibling;
   const arr = hdr.querySelector('.fmar');
@@ -1200,8 +1616,11 @@ function updateNowBadge() {
   const bs = gregorianToBengali(now.getFullYear(), now.getMonth() + 1, now.getDate());
   const h = now.getHours(), mi2 = now.getMinutes(), s = now.getSeconds();
   const t = `${bn(h)}:${mi2 < 10 ? '০' + bn(mi2) : bn(mi2)}:${s < 10 ? '০' + bn(s) : bn(s)}`;
+  const wdLabel = LANG === 'en' ? EN_WD[now.getDay()] : BN_WD[now.getDay()];
+  const mLabel  = LANG === 'en' ? EN_BN_M[bs.m] : BN_M[bs.m];
+  const eraLabel= LANG === 'en' ? 'BS' : 'বঙ্গাব্দ';
   document.getElementById('nowBadge').textContent =
-    `⏰ এখন: ${BN_WD[now.getDay()]} • ${bn(bs.d)} ${BN_M[bs.m]}, ${bn(bs.y)} বঙ্গাব্দ • ${t}`;
+    `⏰ ${LANG==='en'?'Now':'এখন'}: ${wdLabel} • ${bn(bs.d)} ${mLabel}, ${bn(bs.y)} ${eraLabel} • ${t}`;
 }
 
 /* ══════════════════════════════════════════════════════
@@ -1210,6 +1629,8 @@ function updateNowBadge() {
 function renderAll() {
   document.getElementById('inYear').value = SEL.y;
   document.getElementById('inMonth').value = SEL.m;
+  // Pre-warm dynamic festival cache for this year
+  getFests(SEL.y);
   renderGrid();
   renderDayDetail();
   renderPanchang();
@@ -1224,6 +1645,12 @@ function shiftM(dir) {
   SEL.m += dir;
   if (SEL.m > 11) { SEL.m = 0; SEL.y++; }
   if (SEL.m < 0)  { SEL.m = 11; SEL.y--; }
+  SEL.d = 1;
+  renderAll();
+}
+
+function shiftY(dir) {
+  SEL.y += dir;
   SEL.d = 1;
   renderAll();
 }
@@ -1248,9 +1675,39 @@ function resetAll() {
 }
 
 function setTheme(t, btn) {
-  document.querySelectorAll('.tb').forEach(b => b.classList.remove('on'));
+  // Remove 'on' from theme buttons only (not lang/region)
+  document.querySelectorAll('.tb').forEach(b => {
+    if (b.id!=='langBtn' && b.id!=='regionBtn') b.classList.remove('on');
+  });
   btn.classList.add('on');
   document.body.className = t;
+}
+
+function toggleLang() {
+  LANG = LANG === 'bn' ? 'en' : 'bn';
+  const btn = document.getElementById('langBtn');
+  if (btn) { btn.textContent = LANG==='en'?'🔤 বাংলা':'🔤 English'; btn.classList.toggle('on',LANG==='en'); }
+  const wdh = document.getElementById('wdhdr');
+  if (wdh) {
+    const lbl = LANG==='en' ? ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'] : ['রবি','সোম','মঙ্গল','বুধ','বৃহঃ','শুক্র','শনি'];
+    [...wdh.children].forEach((el,i)=>el.textContent=lbl[i]);
+  }
+  document.querySelector('.hdr h2').textContent = LANG==='en'
+    ? 'Accurate Panchang • Muhurtas • Festivals'
+    : 'সঠিক পঞ্চাঙ্গ • মুহূর্ত • উৎসব';
+  // Rebuild festival tabs in correct language
+  buildTabs();
+  renderAll();
+}
+
+function toggleRegion() {
+  REGION = REGION==='BD' ? 'WB' : 'BD';
+  const btn = document.getElementById('regionBtn');
+  if (btn) { btn.textContent = REGION==='BD'?'🇧🇩 BD':'🇮🇳 WB'; btn.classList.toggle('on',REGION==='WB'); }
+  // WB: 1 Baishakh = 15 April vs BD: 14 April
+  // Clear festival cache when region changes
+  Object.keys(_festCache).forEach(k=>delete _festCache[k]);
+  renderAll();
 }
 
 document.getElementById('inMonth').addEventListener('change', function () {
@@ -1284,24 +1741,42 @@ setInterval(updateNowBadge, 1000);
 
 /* ══════════════════════════════════════════════════════
    SERVICE WORKER REGISTRATION
+   Only active when served from a real domain with sw.js
+   present (e.g. your own hosting / Netlify / GitHub Pages).
+   Silently skipped in sandboxed previews (claudeusercontent)
+   where the SW cannot be registered — the app works fully
+   without it in those environments.
 ══════════════════════════════════════════════════════ */
 if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw.js')
-      .then(reg => {
-        console.log('[PWA] Service Worker registered:', reg.scope);
-        // Check for updates
-        reg.addEventListener('updatefound', () => {
-          const newWorker = reg.installing;
-          newWorker.addEventListener('statechange', () => {
-            if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-              showUpdateBanner();
-            }
+  // Only attempt registration on real http/https origins that are NOT
+  // known sandbox domains where SW registration always fails.
+  const origin = location.hostname;
+  const isSandbox = (
+    origin.includes('claudeusercontent.com') ||
+    origin.includes('localhost') === false && origin.includes('127.0.0.1') === false &&
+    /^blob:|^about:|^null$/.test(location.protocol)
+  );
+  const isLocalhost = origin === 'localhost' || origin === '127.0.0.1';
+
+  if (!isSandbox || isLocalhost) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./sw.js')
+        .then(reg => {
+          console.log('[PWA] Service Worker registered. Scope:', reg.scope);
+          reg.addEventListener('updatefound', () => {
+            const w = reg.installing;
+            w.addEventListener('statechange', () => {
+              if (w.state === 'installed' && navigator.serviceWorker.controller) {
+                showUpdateBanner();
+              }
+            });
           });
+        })
+        .catch(() => {
+          // SW unavailable (missing file, wrong MIME, etc.) — silently ignored.
         });
-      })
-      .catch(err => console.warn('[PWA] SW registration failed:', err));
-  });
+    });
+  }
 }
 
 /* ══════════════════════════════════════════════════════
