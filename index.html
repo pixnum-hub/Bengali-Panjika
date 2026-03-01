@@ -12,7 +12,7 @@
 <meta name="theme-color" content="#d4a030" id="metaTheme">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="বাংলা পঞ্জিকা">
+<meta name="apple-mobile-web-app-title" content="পঞ্জিকা">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="application-name" content="বাংলা পঞ্জিকা">
 
@@ -35,46 +35,50 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Bengali:wght@300;400;600;700;900&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#0c0c18;--bg2:#13132a;--bg3:#1a1a38;--bg4:#222248;
-  --text:#ede5d8;--text2:#8888aa;--text3:#4a4a70;
-  --accent:#d4a030;--accent2:#f0c848;--accent3:#7744cc;--accent4:#3399ff;
-  --border:#252550;--card:#101025;--cell:#141430;
-  --today-bg:#2a1e00;--today-bd:#d4a030;
-  --sel-bg:#180a38;--sel-bd:#7744cc;
+  /* DARK — deep indigo-navy, warm gold accents, high contrast */
+  --bg:#0a0d1a;--bg2:#111628;--bg3:#1a2038;--bg4:#242c4c;
+  --text:#f2eedd;--text2:#a8b8e0;--text3:#4c5c88;
+  --accent:#f0a820;--accent2:#ffd060;--accent3:#7c55ee;--accent4:#3399ff;
+  --border:#202a50;--card:#0c1020;--cell:#0e1428;
+  --today-bg:#2e1e00;--today-bd:#f0a820;
+  --sel-bg:#18083c;--sel-bd:#7c55ee;
   --fdot:#ff3355;--mdot:#3399ff;
-  --good:#44bb55;--bad:#ee4444;--neutral:#ff9900;
-  --shadow:0 8px 48px rgba(0,0,0,.65);
-  --hg:linear-gradient(150deg,#1c0a48 0%,#091828 55%,#1c0818 100%);
+  --good:#2edd66;--bad:#ff3344;--neutral:#ffaa00;
+  --shadow:0 8px 56px rgba(0,0,0,.85);
+  --hg:linear-gradient(150deg,#1a0a50 0%,#06102e 55%,#180620 100%);
 }
 .L{
-  --bg:#f6f1e7;--bg2:#ede6d5;--bg3:#e2d8c2;--bg4:#d4c8a0;
-  --text:#1a1205;--text2:#6b5030;--text3:#9a7040;
-  --accent:#8b5500;--accent2:#b07800;--accent3:#5828aa;--accent4:#1a70cc;
-  --border:#c8b888;--card:#fdf8ef;--cell:#f8f3e6;
-  --today-bg:#fff3bb;--today-bd:#b07800;
-  --sel-bg:#eaddff;--sel-bd:#5828aa;
-  --fdot:#cc1133;--mdot:#1a70cc;
-  --shadow:0 8px 48px rgba(0,0,0,.14);
-  --hg:linear-gradient(150deg,#3a1870 0%,#182858 55%,#38103a 100%);
+  /* LIGHT — warm ivory, deep brown ink, rich saffron accents */
+  --bg:#f7f2e4;--bg2:#ede5ce;--bg3:#dfd5b8;--bg4:#ccc09a;
+  --text:#180e00;--text2:#5c3a0c;--text3:#9a7038;
+  --accent:#8b4a00;--accent2:#b86800;--accent3:#4c20a8;--accent4:#1060cc;
+  --border:#c0a870;--card:#fdf8ec;--cell:#f5efd8;
+  --today-bg:#fff3a0;--today-bd:#b86800;
+  --sel-bg:#ddd0ff;--sel-bd:#4c20a8;
+  --fdot:#cc0022;--mdot:#1060cc;
+  --good:#0c8840;--bad:#cc1100;--neutral:#b86800;
+  --shadow:0 8px 48px rgba(0,0,0,.20);
+  --hg:linear-gradient(150deg,#32106a 0%,#0e1c58 55%,#300a38 100%);
 }
 .O{
-  --bg:#000;--bg2:#060606;--bg3:#0c0c0c;--bg4:#111;
-  --text:#fff;--text2:#686868;--text3:#363636;
-  --accent:#f0a820;--accent2:#ffd040;--accent3:#aa44ff;--accent4:#44aaff;
-  --border:#1a1a1a;--card:#000;--cell:#040408;
-  --today-bg:#180e00;--today-bd:#f0a820;
-  --sel-bg:#08002a;--sel-bd:#aa44ff;
-  --fdot:#ff2244;--mdot:#44aaff;
-  --good:#33cc44;--bad:#ff3333;
-  --shadow:0 8px 48px rgba(255,180,0,.07);
-  --hg:linear-gradient(150deg,#0e0028 0%,#001018 55%,#0e0012 100%);
+  /* OLED — pure black, vivid neon accents, maximum contrast */
+  --bg:#000000;--bg2:#060608;--bg3:#0c0c10;--bg4:#121218;
+  --text:#ffffff;--text2:#7080a0;--text3:#384060;
+  --accent:#ffb300;--accent2:#ffd840;--accent3:#aa44ff;--accent4:#44bbff;
+  --border:#181820;--card:#000000;--cell:#040408;
+  --today-bg:#1c1000;--today-bd:#ffb300;
+  --sel-bg:#080028;--sel-bd:#aa44ff;
+  --fdot:#ff1144;--mdot:#44bbff;
+  --good:#00ee55;--bad:#ff2200;--neutral:#ffaa00;
+  --shadow:0 8px 48px rgba(255,180,0,.10);
+  --hg:linear-gradient(150deg,#0c0030 0%,#000e1c 55%,#0c0010 100%);
 }
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
 body{background:var(--bg);color:var(--text);font-family:'Noto Serif Bengali',serif;min-height:100vh;display:flex;flex-direction:column;transition:background .35s,color .35s}
 /* HEADER */
 .hdr{background:var(--hg);padding:1.5rem 1rem 1rem;text-align:center;border-bottom:2px solid var(--accent);box-shadow:var(--shadow);position:relative;overflow:hidden}
-.hdr::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% -20%,rgba(212,160,48,.22),transparent 65%);pointer-events:none}
+.hdr::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% -20%,rgba(240,168,32,.28),transparent 65%);pointer-events:none}
 .hdr .sri{display:block;font-size:.72rem;letter-spacing:.4em;color:var(--accent2);opacity:.6;margin-bottom:.3rem}
 .hdr h1{font-size:clamp(1.3rem,5vw,2.3rem);font-weight:900;color:var(--accent2);text-shadow:0 0 28px rgba(240,200,70,.4);line-height:1.2}
 .hdr h2{font-size:clamp(.68rem,2vw,.82rem);color:var(--text2);font-weight:300;margin-top:.2rem;letter-spacing:.06em}
@@ -100,7 +104,7 @@ select:focus,input:focus{border-color:var(--accent)}
 .btoday:hover{background:var(--accent2);transform:scale(1.04)}
 /* MONTH CALENDAR */
 .mcal{background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden;margin-bottom:.9rem;box-shadow:var(--shadow)}
-.mcal-hdr{background:linear-gradient(120deg,var(--accent3) 0%,#180840 100%);padding:.85rem 1rem;display:flex;align-items:center;justify-content:space-between;gap:.4rem}
+.mcal-hdr{background:linear-gradient(120deg,var(--accent3) 0%,#0e0630 100%);padding:.85rem 1rem;display:flex;align-items:center;justify-content:space-between;gap:.4rem}
 .mnav{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:var(--accent2);border-radius:8px;padding:.3rem .75rem;font-size:.8rem;cursor:pointer;transition:background .18s;font-family:inherit}
 .mnav:hover{background:rgba(255,255,255,.22)}
 .mcal-title{text-align:center;flex:1}
@@ -122,17 +126,23 @@ select:focus,input:focus{border-color:var(--accent)}
 .den{font-size:.55rem;color:var(--text3);line-height:1;margin-top:1px}
 .tod-lbl{font-size:.46rem;background:var(--accent);color:#000;border-radius:3px;padding:0 3px;font-weight:900;position:absolute;top:2px;right:2px}
 .fl{font-size:.5rem;color:var(--accent2);line-height:1.25;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;word-break:break-all;margin-top:1px}
-.dots{display:flex;gap:2px;flex-wrap:wrap;margin-top:auto}
+.dots{display:flex;gap:2px;flex-wrap:wrap;margin-top:auto;align-items:center}
 .dot{width:5px;height:5px;border-radius:50%}
 .df{background:var(--fdot)}
 .dm{background:var(--mdot)}
+/* Vrat marker pills on calendar cells */
+.vp{font-size:.38rem;font-weight:900;padding:0 2px;border-radius:2px;line-height:1.5;letter-spacing:0}
+.vp-e{background:rgba(46,221,102,.25);color:var(--good)}
+.vp-p{background:rgba(124,85,238,.25);color:var(--accent3)}
+.vp-c{background:rgba(51,153,255,.22);color:var(--accent4)}
+.vp-m{background:rgba(51,153,255,.22);color:var(--accent4)}
 /* LEGEND */
 .legend{display:flex;gap:.8rem;justify-content:center;padding:.4rem;font-size:.62rem;color:var(--text2);flex-wrap:wrap;border-top:1px solid var(--border);background:var(--bg2)}
 .leg{display:flex;align-items:center;gap:.25rem}
 .leg .dot{width:7px;height:7px}
 /* DAY DETAIL */
 .ddet{background:var(--card);border:2px solid var(--accent3);border-radius:16px;margin-bottom:.9rem;overflow:hidden;box-shadow:var(--shadow)}
-.ddet-hdr{background:linear-gradient(105deg,var(--accent3),#180840 75%);padding:.8rem 1rem;display:flex;align-items:center;gap:.8rem}
+.ddet-hdr{background:linear-gradient(105deg,var(--accent3),#0e0630 75%);padding:.8rem 1rem;display:flex;align-items:center;gap:.8rem}
 .dbn{font-size:2.8rem;font-weight:900;color:var(--accent2);line-height:1;min-width:62px;text-align:center}
 .dinfo{flex:1}
 .dwd{font-size:.95rem;font-weight:700;color:#fff}
@@ -181,10 +191,27 @@ select:focus,input:focus{border-color:var(--accent)}
 .muh-name{font-size:.82rem;font-weight:700;color:var(--text)}
 .muh-desc{font-size:.64rem;color:var(--text2);margin-top:.1rem}
 .muh-time{font-size:.65rem;color:var(--accent2);margin-top:.06rem;font-weight:600}
+.muh-now{font-size:.56rem;background:var(--accent);color:#000;border-radius:3px;padding:0 4px;font-weight:900;margin-left:.4rem;vertical-align:middle}
 .mbadge{font-size:.62rem;padding:.14rem .4rem;border-radius:20px;font-weight:700;white-space:nowrap}
 .mg{background:rgba(68,187,85,.14);color:var(--good);border:1px solid rgba(68,187,85,.3)}
 .mb{background:rgba(238,68,68,.14);color:var(--bad);border:1px solid rgba(238,68,68,.3)}
 .mn{background:rgba(255,153,0,.14);color:var(--neutral);border:1px solid rgba(255,153,0,.3)}
+/* CHOGHADIYA */
+.chog-section{padding:.5rem .75rem .75rem}
+.chog-title{font-size:.7rem;font-weight:700;color:var(--text2);letter-spacing:.06em;padding:.3rem 0 .5rem;border-bottom:1px solid var(--border);margin-bottom:.4rem;display:flex;align-items:center;gap:.4rem}
+.chog-grid{display:grid;grid-template-columns:1fr 1fr;gap:.32rem}
+.chog-item{border-radius:9px;padding:.42rem .6rem;border:1px solid var(--border);display:flex;flex-direction:column;gap:2px;transition:border-color .15s}
+.chog-item.chog-now{border-color:var(--accent);background:rgba(240,168,32,.08)}
+.chog-name{font-size:.8rem;font-weight:700}
+.chog-time{font-size:.6rem;color:var(--text2);font-weight:600}
+.chog-type{font-size:.56rem;padding:.08rem .3rem;border-radius:4px;font-weight:700;display:inline-block;margin-top:1px}
+.cg-amrit{background:rgba(46,221,102,.15);color:var(--good);border:1px solid rgba(46,221,102,.3)}
+.cg-shubh{background:rgba(51,153,255,.15);color:var(--accent4);border:1px solid rgba(51,153,255,.3)}
+.cg-labh{background:rgba(124,85,238,.15);color:var(--accent3);border:1px solid rgba(124,85,238,.3)}
+.cg-chal{background:rgba(168,184,224,.12);color:var(--text2);border:1px solid var(--border)}
+.cg-udveg{background:rgba(255,170,0,.13);color:var(--neutral);border:1px solid rgba(255,170,0,.3)}
+.cg-rog{background:rgba(255,51,68,.13);color:var(--bad);border:1px solid rgba(255,51,68,.3)}
+.cg-kal{background:rgba(255,51,68,.13);color:var(--bad);border:1px solid rgba(255,51,68,.3)}
 /* PANCHANG */
 .pgrid{display:grid;grid-template-columns:1fr 1fr;gap:.42rem;padding:.75rem}
 .pi{display:flex;flex-direction:column;padding:.5rem .7rem;background:var(--bg2);border-radius:8px;border-left:3px solid var(--accent3)}
@@ -290,6 +317,9 @@ footer em{color:var(--accent);font-style:normal}
   <div class="legend">
     <div class="leg"><div class="dot dm"></div>পূর্ণিমা/অমাবস্যা</div>
     <div class="leg"><div class="dot df"></div>উৎসব</div>
+    <div class="leg"><span class="vp vp-e" style="font-size:.5rem;padding:1px 3px">ই</span>একাদশী</div>
+    <div class="leg"><span class="vp vp-p" style="font-size:.5rem;padding:1px 3px">প্র</span>প্রদোষ</div>
+    <div class="leg"><span class="vp vp-c" style="font-size:.5rem;padding:1px 3px">চ</span>চতুর্থী</div>
     <div class="leg" style="color:var(--today-bd)">■ আজ</div>
     <div class="leg" style="color:var(--sel-bd)">■ নির্বাচিত</div>
   </div>
@@ -325,6 +355,16 @@ footer em{color:var(--accent);font-style:normal}
     <div class="muh-grid" id="muhGrid"></div>
   </div>
 </div>
+<!-- CHOGHADIYA -->
+<div class="mcal" style="margin-bottom:.9rem">
+  <div class="mcal-hdr" onclick="toggleChog()" style="cursor:pointer;user-select:none;padding:.72rem 1rem;display:flex;align-items:center;justify-content:space-between">
+    <div style="font-size:.88rem;font-weight:700;color:var(--accent2);letter-spacing:.05em">✦ <span id="chogTitle">চৌঘড়িয়া</span> ✦</div>
+    <span id="chogArrow" style="color:var(--accent2);font-size:.82rem;transition:transform .25s;display:inline-block">▼</span>
+  </div>
+  <div id="chogBody" class="hidden">
+    <div id="chogGrid"></div>
+  </div>
+</div>
 <!-- FESTIVALS -->
 <div class="fcard">
   <div class="mcal-hdr" onclick="toggleFest()" style="cursor:pointer;user-select:none;padding:.72rem 1rem;display:flex;align-items:center;justify-content:space-between">
@@ -351,10 +391,6 @@ footer em{color:var(--accent);font-style:normal}
 /* ══════════════════════════════════════════════════════
    BENGALI DIGITS & CONSTANTS
 ══════════════════════════════════════════════════════ */
-/* ── LANGUAGE STATE ── */
-let LANG = 'bn'; // 'bn' or 'en'
-let REGION = 'BD'; // 'BD' or 'WB'
-
 /* ── LANGUAGE & REGION STATE ── */
 let LANG = 'bn';   // 'bn' | 'en'
 let REGION = 'BD'; // 'BD' | 'WB'
@@ -613,6 +649,57 @@ function calcNakshatra(jd) {
   return { idx, name: NAKSH[idx], frac, lon: mlon };
 }
 
+/* ── End-time finders (binary search, accurate to ~1 min) ── */
+// Find when current tithi ends (the JD when elongation crosses next 12° boundary)
+function tithiEndTime(jd) {
+  const t0 = calcTithi(jd);
+  // Target elongation = start of NEXT tithi
+  const targetElong = (t0.num + 1) * 12; // degrees (may be > 360 → wraps)
+  // Search window: tithi lasts ~1 day max, search up to 1.5 days ahead
+  let lo = jd, hi = jd + 1.5;
+  for (let i = 0; i < 48; i++) {
+    const mid = (lo + hi) / 2;
+    const t = calcTithi(mid);
+    // Current elongation — handle wrap-around at 360
+    let elong = t.elong;
+    // If target > 360 (i.e. we're near end of cycle), shift
+    const adjustedTarget = targetElong > 360 ? targetElong - 360 : targetElong;
+    const adjustedElong  = (targetElong > 360 && elong < 180) ? elong + 360 : elong;
+    if (adjustedElong < targetElong) lo = mid; else hi = mid;
+  }
+  return (lo + hi) / 2; // JD of tithi end
+}
+
+// Find when current nakshatra ends
+function nakshatraEndTime(jd) {
+  const n0 = calcNakshatra(jd);
+  const nakSize = 360 / 27; // ~13.333°
+  const targetLon = (n0.idx + 1) * nakSize; // next nakshatra start
+  let lo = jd, hi = jd + 2.0; // nakshatra lasts up to ~2 days
+  for (let i = 0; i < 48; i++) {
+    const mid = (lo + hi) / 2;
+    const mlon = moonLongitude(mid);
+    // handle wrap near 360
+    const adjTarget = targetLon > 360 ? targetLon - 360 : targetLon;
+    const adjMlon   = (targetLon > 360 && mlon < 90) ? mlon + 360 : mlon;
+    if (adjMlon < targetLon) lo = mid; else hi = mid;
+  }
+  return (lo + hi) / 2; // JD of nakshatra end
+}
+
+// Convert JD end time to local display time (HH:MM in Bengali/English)
+function jdToLocalTime(jd) {
+  // JD is at noon UTC. Offset = TZ hours from UTC.
+  // Fractional day × 24 + TZ gives local hour
+  const dayFrac = jd - Math.floor(jd); // 0..1, 0 = noon UTC
+  let localH = (dayFrac * 24 + 12 + TZ) % 24; // local hours 0-24
+  const hh = Math.floor(localH);
+  const mm = Math.round((localH - hh) * 60);
+  const mm2 = mm >= 60 ? 0 : mm;
+  const hh2 = mm >= 60 ? hh + 1 : hh;
+  return bn(hh2) + ':' + (mm2 < 10 ? '০' + bn(mm2) : bn(mm2));
+}
+
 // Yoga: (Sun lon + Moon lon) / (360/27)
 function calcYoga(jd) {
   const slon = sunLongitude(jd);
@@ -708,6 +795,87 @@ function gregorianToHijri(gy, gm, gd) {
   const Hd = L - Math.floor((709 * Hm) / 24);
   const Hy = 30 * N2 + J - 30;
   return { y: Hy, m: Math.max(1, Math.min(12, Hm)), d: Hd };
+}
+
+/* ══════════════════════════════════════════════════════
+   CHOGHADIYA — 8-period auspicious system
+   Day: 8 equal periods from sunrise to sunset
+   Night: 8 equal periods from sunset to next sunrise
+   Order determined by weekday (0=Sun..6=Sat)
+══════════════════════════════════════════════════════ */
+
+// Choghadiya type for each of 8 day-periods by weekday
+// Types: A=Amrit, S=Shubh, L=Labh, Ch=Chal, U=Udveg, R=Rog, K=Kal
+const CHOG_DAY = [
+  ['U','Ch','L','A','K','S','R','Ch'],  // Sunday
+  ['A','K','S','R','Ch','L','U','Ch'],  // Monday
+  ['R','Ch','L','U','Ch','K','S','A'],  // Tuesday (Rog start is auspicious in some traditions but listed inauspicious)
+  ['L','U','Ch','K','S','R','Ch','A'],  // Wednesday (Labh start)
+  ['S','R','Ch','L','U','Ch','K','A'],  // Thursday
+  ['Ch','L','U','Ch','K','S','R','A'],  // Friday
+  ['K','S','R','Ch','L','U','Ch','A'],  // Saturday
+];
+// Night Choghadiya order by weekday
+const CHOG_NIGHT = [
+  ['S','R','Ch','L','U','Ch','K','A'],  // Sunday night
+  ['Ch','L','U','Ch','K','S','R','A'],  // Monday night
+  ['K','S','R','Ch','L','U','Ch','A'],  // Tuesday night
+  ['Ch','K','S','R','Ch','L','U','A'],  // Wednesday night
+  ['R','Ch','L','U','Ch','K','S','A'],  // Thursday night
+  ['U','Ch','K','S','R','Ch','L','A'],  // Friday night
+  ['L','U','Ch','K','S','R','Ch','A'],  // Saturday night
+];
+const CHOG_INFO = {
+  A: { bn:'অমৃত', en:'Amrit',  css:'cg-amrit', auspic:'G', desc:'সর্বোত্তম শুভ মুহূর্ত' },
+  S: { bn:'শুভ',  en:'Shubh',  css:'cg-shubh', auspic:'G', desc:'শুভ কার্যের জন্য উত্তম' },
+  L: { bn:'লাভ',  en:'Labh',   css:'cg-labh',  auspic:'G', desc:'ব্যবসা ও লাভের জন্য শুভ' },
+  Ch:{ bn:'চল',   en:'Chal',   css:'cg-chal',  auspic:'N', desc:'সাধারণ কাজের জন্য মধ্যম' },
+  U: { bn:'উদ্বেগ',en:'Udveg', css:'cg-udveg', auspic:'B', desc:'সরকারি কাজে এড়ানো উচিত' },
+  R: { bn:'রোগ',  en:'Rog',    css:'cg-rog',   auspic:'B', desc:'অশুভ — শুভ কাজ বর্জনীয়' },
+  K: { bn:'কাল',  en:'Kal',    css:'cg-kal',   auspic:'B', desc:'অশুভ মুহূর্ত — বর্জনীয়' },
+};
+
+function getChoghadiya(jd, weekday) {
+  const sun = sunRiseSet(jd);
+  const sun2 = sunRiseSet(jd + 1);
+  if (!sun.rise || !sun.set) return { day: [], night: [] };
+
+  const riseH = sun.riseH;
+  const setH  = sun.setH;
+  const nextRiseH = sun2 ? sun2.riseH + 24 : riseH + 24;
+
+  const dayDur   = setH - riseH;
+  const nightDur = nextRiseH - setH;
+  const daySlot   = dayDur / 8;
+  const nightSlot = nightDur / 8;
+
+  function toHM(h) {
+    const norm = ((h % 24) + 24) % 24;
+    const hh = Math.floor(norm);
+    const mm = Math.round((norm - hh) * 60);
+    const mm2 = mm >= 60 ? 0 : mm;
+    const hh2 = mm >= 60 ? hh + 1 : hh;
+    return bn(hh2) + ':' + (mm2 < 10 ? '০' + bn(mm2) : bn(mm2));
+  }
+
+  const day = CHOG_DAY[weekday].map((type, i) => ({
+    type, info: CHOG_INFO[type],
+    start: toHM(riseH + i * daySlot),
+    end:   toHM(riseH + (i + 1) * daySlot),
+    startH: riseH + i * daySlot,
+    endH:   riseH + (i + 1) * daySlot,
+    period: 'day'
+  }));
+  const night = CHOG_NIGHT[weekday].map((type, i) => ({
+    type, info: CHOG_INFO[type],
+    start: toHM(setH + i * nightSlot),
+    end:   toHM(setH + (i + 1) * nightSlot),
+    startH: setH + i * nightSlot,
+    endH:   setH + (i + 1) * nightSlot,
+    period: 'night'
+  }));
+
+  return { day, night };
 }
 
 /* ══════════════════════════════════════════════════════
@@ -1242,6 +1410,19 @@ function renderGrid() {
     fmap[f.d].push(f);
   });
 
+  // Vrat type map: compute tithi at sunrise for each day to find vrat tithis
+  const vratMap = {}; // day → array of vrat codes e.g. ['E','P']
+  for (let vd = 1; vd <= getBSMonthDays(bY, bM); vd++) {
+    const vg = bengaliToGregorian(bY, bM, vd);
+    const vtithi = calcTithi(vg.jd - 0.5 + 0.5/24); // at 06:00 IST (sunrise)
+    const vt = vtithi.num;
+    const codes = [];
+    if (vt === 10 || vt === 25) codes.push('E'); // Ekadashi
+    if (vt === 12 || vt === 27) codes.push('P'); // Pradosha
+    if (vt === 3  || vt === 18) codes.push('C'); // Chaturthi
+    if (codes.length) vratMap[vd] = codes;
+  }
+
   // First day weekday
   const firstDate = new Date(g1.y, g1.m - 1, g1.d);
   const startWD = firstDate.getDay(); // 0=Sun
@@ -1309,6 +1490,18 @@ function renderGrid() {
       d2.className = 'dot df';
       dots.appendChild(d2);
     });
+    // Vrat pills: E=Ekadashi, P=Pradosha, C=Chaturthi
+    if (vratMap[day]) {
+      const VRAT_LABELS = { E: 'ই', P: 'প্র', C: 'চ' };
+      const VRAT_CSS    = { E: 'vp-e', P: 'vp-p', C: 'vp-c' };
+      vratMap[day].forEach(code => {
+        const vp = document.createElement('span');
+        vp.className = 'vp ' + VRAT_CSS[code];
+        vp.textContent = VRAT_LABELS[code];
+        vp.title = code === 'E' ? 'একাদশী' : code === 'P' ? 'প্রদোষ' : 'চতুর্থী';
+        dots.appendChild(vp);
+      });
+    }
     c.appendChild(dots);
     grid.appendChild(c);
   }
@@ -1367,6 +1560,12 @@ function renderDayDetail() {
   const isSarvartha = calcNakshatra(jd - 0.5 + 0.5/24).idx === SARV_NK2[wd];
   const specialYoga = isSarvartha ? (isEn2 ? '⭐ Sarvartha Siddhi Yoga' : '⭐ সর্বার্থ সিদ্ধি যোগ') : '';
 
+  // ── Feature 4 & 5: Tithi + Nakshatra end times ──
+  const tithiEndJD = tithiEndTime(jd);
+  const nakEndJD   = nakshatraEndTime(jd);
+  const tithiEnd   = jdToLocalTime(tithiEndJD);
+  const nakEnd     = jdToLocalTime(nakEndJD);
+
   const panel = document.getElementById('ddet');
   panel.innerHTML = `
     <div class="ddet-hdr">
@@ -1381,8 +1580,9 @@ function renderDayDetail() {
     </div>
     <div class="dbody">
       <div class="dr"><span class="dk">${isEn2?'Tithi':'তিথি'}</span><span class="dv gold">${tN} (${pN})</span></div>
-      <div class="dr"><span class="dk">${isEn2?'Tithi No.':'তিথি ক্রমাঙ্ক'}</span><span class="dv">${bn(tithi.num + 1)}/৩০</span></div>
+      <div class="dr"><span class="dk">${isEn2?'Tithi ends':'তিথি শেষ'}</span><span class="dv gold">${tithiEnd}</span></div>
       <div class="dr"><span class="dk">${isEn2?'Nakshatra':'নক্ষত্র'}</span><span class="dv">${nakN}</span></div>
+      <div class="dr"><span class="dk">${isEn2?'Nakshatra ends':'নক্ষত্র শেষ'}</span><span class="dv">${nakEnd}</span></div>
       <div class="dr"><span class="dk">${isEn2?'Yoga':'যোগ'}</span><span class="dv">${yogaN}</span></div>
       <div class="dr"><span class="dk">${isEn2?'Karana':'করণ'}</span><span class="dv">${kar.name}</span></div>
       <div class="dr"><span class="dk">${isEn2?'Moon Rashi':'চন্দ্র রাশি'}</span><span class="dv blue">${moonRashiName}</span></div>
@@ -1479,6 +1679,50 @@ function renderPanchang() {
     { k: isEn?'Moon Nakshatra':'চন্দ্র নক্ষত্র', v: isEn?EN_NAKSH[nak.idx]:nak.name, c: '' },
     { k: isEn?'Julian Day':'জুলিয়ান দিন',       v: bn(jd), c: 'blue' },
   ].map(r => `<div class="vr"><span class="vrk">${r.k}</span><span class="vrv ${r.c}">${r.v}</span></div>`).join('');
+}
+
+/* ══════════════════════════════════════════════════════
+   CHOGHADIYA RENDER
+══════════════════════════════════════════════════════ */
+function renderChoghadiya() {
+  const { y: bY, m: bM, d: bD } = SEL;
+  const g = bengaliToGregorian(bY, bM, bD);
+  const jd = g.jd;
+  const gDate = new Date(g.y, g.m - 1, g.d);
+  const wd = gDate.getDay();
+  const isEn = LANG === 'en';
+
+  document.getElementById('chogTitle').textContent = isEn ? 'Choghadiya' : 'চৌঘড়িয়া';
+
+  const chog = getChoghadiya(jd, wd);
+  const nowH = new Date().getHours() + new Date().getMinutes() / 60;
+  const isToday = bY === TODAY_BS.y && bM === TODAY_BS.m && bD === TODAY_BS.d;
+
+  function renderPeriods(periods, label) {
+    return `<div class="chog-title"><span>${label}</span></div>
+    <div class="chog-grid">
+      ${periods.map(ch => {
+        const isNow = isToday && nowH >= ch.startH && nowH < ch.endH;
+        const name = isEn ? ch.info.en : ch.info.bn;
+        const auspicLabel = ch.info.auspic === 'G' ? (isEn ? 'Auspicious' : 'শুভ')
+                          : ch.info.auspic === 'B' ? (isEn ? 'Inauspicious' : 'অশুভ')
+                          : (isEn ? 'Neutral' : 'মধ্যম');
+        return `<div class="chog-item${isNow ? ' chog-now' : ''}">
+          <span class="chog-name" style="color:var(--text)">${name}${isNow ? ' <span class="muh-now">▶ এখন</span>' : ''}</span>
+          <span class="chog-time">⏱ ${ch.start} – ${ch.end}</span>
+          <span class="chog-type ${ch.info.css}">${auspicLabel}</span>
+        </div>`;
+      }).join('')}
+    </div>`;
+  }
+
+  document.getElementById('chogGrid').innerHTML = `
+    <div class="chog-section">
+      ${renderPeriods(chog.day, isEn ? '☀️ Day Choghadiya' : '☀️ দিনের চৌঘড়িয়া')}
+    </div>
+    <div class="chog-section" style="border-top:1px solid var(--border)">
+      ${renderPeriods(chog.night, isEn ? '🌙 Night Choghadiya' : '🌙 রাতের চৌঘড়িয়া')}
+    </div>`;
 }
 
 /* ══════════════════════════════════════════════════════
@@ -1595,6 +1839,14 @@ function toggleMuh() {
   arrow.style.transform = open ? 'rotate(-90deg)' : '';
 }
 
+function toggleChog() {
+  const body  = document.getElementById('chogBody');
+  const arrow = document.getElementById('chogArrow');
+  const open  = !body.classList.contains('hidden');
+  body.classList.toggle('hidden', open);
+  arrow.style.transform = open ? 'rotate(-90deg)' : '';
+}
+
 function toggleAcc(hdr) {
   const body = hdr.nextElementSibling;
   const arr = hdr.querySelector('.fmar');
@@ -1635,6 +1887,7 @@ function renderAll() {
   renderDayDetail();
   renderPanchang();
   renderMuhurtas();
+  renderChoghadiya();
   filterF(document.getElementById('fsrch').value);
 }
 
