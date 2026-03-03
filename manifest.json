@@ -1,16 +1,19 @@
 {
-  "name": "বাংলা পঞ্জিকা",
+  "name": "বাংলা পঞ্জিকা — Bangla Panjika",
   "short_name": "পঞ্জিকা",
-  "description": "বাংলা পঞ্জিকা — সঠিক পঞ্চাঙ্গ, তিথি, নক্ষত্র, ২৫ মুহূর্ত ও উৎসব তালিকা। © Manik Roy",
-  "start_url": "./index.html",
+  "description": "সঠিক পঞ্চাঙ্গ, তিথি, নক্ষত্র, মুহূর্ত ও উৎসব তালিকা। Accurate Bengali Panchang with Tithi, Nakshatra, 25 Muhurtas, Choghadiya, Festivals. Surya, Chandra & Drik Siddhanta. Bengali & English calendar. GPS location support. © Manik Roy 2026",
+  "start_url": "./index.html?source=pwa",
   "scope": "./",
+  "id": "bangla-panjika-2026",
   "display": "standalone",
+  "display_override": ["standalone", "minimal-ui", "browser"],
   "orientation": "portrait-primary",
-  "background_color": "#0c0c18",
+  "background_color": "#0a0d1a",
   "theme_color": "#d4a030",
   "lang": "bn",
   "dir": "ltr",
-  "categories": ["utilities", "lifestyle", "education"],
+  "categories": ["lifestyle", "utilities", "education"],
+
   "icons": [
     {
       "src": "icon-192.png",
@@ -37,16 +40,72 @@
       "purpose": "maskable"
     }
   ],
+
   "shortcuts": [
     {
-      "name": "আজকের পঞ্জিকা",
-      "short_name": "আজ",
+      "name": "আজকের পঞ্চাঙ্গ",
+      "short_name": "আজকের পঞ্চাঙ্গ",
       "description": "আজকের তিথি, নক্ষত্র ও মুহূর্ত দেখুন",
-      "url": "./index.html",
-      "icons": [
-        { "src": "icon-192.png", "sizes": "192x192", "type": "image/png" }
-      ]
+      "url": "./index.html#today",
+      "icons": [{ "src": "icon-192.png", "sizes": "192x192", "type": "image/png" }]
+    },
+    {
+      "name": "Today's Panchang",
+      "short_name": "Today",
+      "description": "View today's Tithi, Nakshatra, Yoga and Muhurtas",
+      "url": "./index.html#today",
+      "icons": [{ "src": "icon-192.png", "sizes": "192x192", "type": "image/png" }]
+    },
+    {
+      "name": "উৎসব তালিকা",
+      "short_name": "উৎসব",
+      "description": "সম্পূর্ণ বাংলা উৎসব ও পার্বণ তালিকা",
+      "url": "./index.html#festivals",
+      "icons": [{ "src": "icon-192.png", "sizes": "192x192", "type": "image/png" }]
+    },
+    {
+      "name": "চৌঘড়িয়া",
+      "short_name": "চৌঘড়িয়া",
+      "description": "দিন ও রাতের চৌঘড়িয়া মুহূর্ত",
+      "url": "./index.html#choghadiya",
+      "icons": [{ "src": "icon-192.png", "sizes": "192x192", "type": "image/png" }]
     }
   ],
-  "prefer_related_applications": false
+
+  "screenshots": [
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "বাংলা পঞ্জিকা — Bengali Calendar & Panchang"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "বাংলা পঞ্জিকা — Festival Calendar"
+    }
+  ],
+
+  "handle_links": "preferred",
+  "prefer_related_applications": false,
+  "related_applications": [],
+
+  "protocol_handlers": [],
+
+  "edge_side_panel": {
+    "preferred_width": 420
+  },
+
+  "share_target": {
+    "action": "./index.html",
+    "method": "GET",
+    "params": {
+      "title": "title",
+      "text": "text",
+      "url": "url"
+    }
+  }
 }
